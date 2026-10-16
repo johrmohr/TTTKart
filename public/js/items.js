@@ -146,6 +146,9 @@ export class ItemSystem {
       case 'triple_toot': kart.applyBoost(BOOST.tootDuration, 'item'); break;
       case 'star': kart.startStar(); break;
       case 'zap': this._zap(kart); break;
+      case 'beer':
+        for (const other of this.karts) if (other !== kart && !other.finished && !other.isInvincible()) other.drunkTimer = 6;
+        break;
       default: return false;
     }
     kart.itemCount--;

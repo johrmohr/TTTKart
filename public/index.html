@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>KRISHIV KART</title>
-<meta name="description" content="KRISHIV KART — a 3D kart party racer with your own custom racer. Use your phone as the steering wheel.">
+<title>TTT KART</title>
+<meta name="description" content="TTT KART — a 3D kart party racer with your own custom racer. Use your phone as the steering wheel.">
 <meta name="theme-color" content="#1b1035">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%231b1035'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%23ffd23a' stroke-width='7'/%3E%3Cpath d='M13 31h14M37 31h14M32 37v14' stroke='%23ffd23a' stroke-width='6'/%3E%3Ccircle cx='32' cy='32' r='7' fill='%23e8344e'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,19 +16,20 @@
 <!-- Socket.IO client (served by server.js). Missing on static dev servers: net.js then
      rejects connect() and the game stays fully playable with keyboard / gamepad. -->
 <script src="/socket.io/socket.io.js"></script>
+<link rel="stylesheet" href="/css/party.css">
 </head>
 <body>
-<canvas id="game" tabindex="0" aria-label="KRISHIV KART game view"></canvas>
+<canvas id="game" tabindex="0" aria-label="TTT KART game view"></canvas>
 <div id="hud"></div>
 <div id="menus">
   <!-- Boot splash: replaced by menus.js once the world is built. -->
   <div class="tk-boot" id="tk-boot">
-    <div class="tk-boot-logo">KRISHIV KART</div>
+    <div class="tk-boot-logo">TTT KART</div>
     <div class="tk-boot-bar"><i></i></div>
     <div class="tk-boot-text" id="tk-boot-text">Warming up the engines…</div>
   </div>
 </div>
-<noscript><div class="tk-fatal">KRISHIV KART needs JavaScript enabled.</div></noscript>
+<noscript><div class="tk-fatal">TTT KART needs JavaScript enabled.</div></noscript>
 <script type="module" src="js/main.js"></script>
 </body>
 </html>

@@ -1,3 +1,46 @@
+# TTT Kart — Brainrot Grand Prix
+
+This checkout adds eight procedural brainrot racers, calmer phone handling, Beer Blitz, and local split-screen racing for up to four people to the original TTTKart game.
+
+## Launch
+
+```sh
+npm ci
+npm start
+```
+
+Open the desktop URL printed by the server (normally http://localhost:3000). Phones and the display must share Wi-Fi. In **Regular play**, each player scans a **different player-slot QR**. The local HTTPS certificate must be accepted once before enabling motion. Each slot uses a separate private controller room so input, reconnects, menus, and item state remain independent. This is shared-display local multiplayer, not remote matchmaking.
+
+## Play
+
+- **Quick Play:** one player, Tung Tung Tung Sahur, Classic kart, Street wheels, Breezy Bay. Keyboard/gamepad or the phone paired to slot 1.
+- **Regular play:** connect 1–4 phones → character → kart → wheels → map. Confirm each choice on your own phone; the final phone confirmation advances the group. The desktop can also select and confirm. If someone changes the shared map, everyone confirms it again.
+- **Two players:** top/bottom views. **Three players:** four quadrants with one spare. **Four players:** four quadrants. Each has its own camera, place, lap, speed, item, and drift/beer status.
+- **Pause / Menu** or Escape pauses. Quit returns to the start screen. Disconnecting an active phone pauses; reconnect its slot and resume. Results wait for all human racers, then allow the CPUs a short finish window.
+- **Controls:** tilt or touch steering; gas on the left, drift on the right, brake and item below. Settings offer sensitivity, inversion, haptics, and optional auto-gas. Center calibrates neutral. Keyboard: WASD/arrows, Shift drift, Space item, Escape pause.
+- **Beer Blitz 🍺:** gives all other unfinished, non-starred racers six seconds of bounded steering wobble. Steering remains usable; the effect fades out during the last second. A star clears it. Repeated hits refresh the timer rather than stacking strength.
+
+## What changed
+
+All eight selectable and CPU characters are brainrot interpretations made from original procedural geometry: Tung Tung Tung Sahur, Tralalero Tralala, Brr Brr Patapim, Bombardiro Crocodilo, Ballerina Cappuccina, Chimpanzini Bananini, Lirili Larila, and Cappuccino Assassino. Kart bodies and wheels change the rendered model and stats. The original coastal circuit remains available alongside **Sahur Speedway**, a new broad stadium oval.
+
+Phone defaults now use a 3.5° dead zone, 45° full lock, a softer response near center, and approximately 71ms low-pass filtering. Existing saved sensitivity preferences are retained. Drift arcs are wider, with countersteering to open the line, three spark tiers, and a release mini-turbo. See `HANDLING.md` for research, tuning, and test scope.
+
+## Validation
+
+```sh
+npm test                   # physics, race/item logic, multiplayer rules
+npm run test:net           # socket protocol + reconnection
+npm run test:pad           # synthetic motion, touch, orientation and phone UI
+npm run test:integration   # actual browser + four independent socket controllers
+```
+
+Browser tests use Chrome at its standard macOS path. The integration test accepts `CHROME_PATH` and `TEST_URL`; without `TEST_URL` it starts an isolated server on ports 3110/3550. Real-device tilt feel and Wi-Fi latency still need a hands-on playtest.
+
+---
+
+## Upstream documentation
+
 # TTTKart — Version 1
 
 TTTKart is an open source 3D kart racing game for the desktop browser. Your **phone

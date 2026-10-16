@@ -1181,3 +1181,18 @@ h2 { margin: 0; font-family: var(--font-display); font-weight: 400; letter-spaci
 @media (prefers-reduced-motion: reduce) {
   .gate-btn, .title-right .mbtn.huge, .phone-demo-body, .btn-item.ready, .stage.auto-gas .btn-gas::after, .hint-rotate-icon { animation: none; }
 }
+
+/* Thumb controls retain the familiar left gas / right drift arrangement.
+   The steering lane stays in the center for touch mode; motion users can
+   keep both thumbs over the large actions. */
+.pbtn { min-height: 56px; min-width: 56px; }
+.tb-btn, .mbtn, .char-card { min-height: 44px; min-width: 44px; }
+.btn-drift { flex-basis: 66%; }
+.btn-item { flex-basis: 34%; }
+#diff-seg[hidden], #btn-customize[hidden] { display:none; }
+#scr-select .screen-title { font-size:clamp(14px,calc(var(--vh) * 5),26px); }
+.beer-status { position:absolute;left:50%;bottom:8px;transform:translateX(-50%);z-index:5;background:#3d2b13;color:#ffd356;padding:5px 12px;border-radius:8px;font-size:12px;white-space:nowrap;pointer-events:none; }
+/* Brainrot names need multiple lines, especially on rotated small phones. */
+.char-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.char-card .cc-name { white-space:normal; overflow:visible; overflow-wrap:anywhere; text-overflow:clip; text-align:center; line-height:1.2; font-size:clamp(11px,calc(var(--vh) * 3.5),16px); letter-spacing:0; flex-shrink:0; }
+#btn-go { font-size:clamp(18px,calc(var(--vh) * 5),32px); white-space:normal; line-height:1.15; overflow-wrap:normal; }

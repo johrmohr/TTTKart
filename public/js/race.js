@@ -365,7 +365,7 @@ export class Race {
     let all = true;
     for (const k of this.karts) if (!k.finished) { all = false; break; }
     let done = all;
-    if (!done && this.playerFinished) {
+    if (!done && this.playerFinished && this.karts.filter(k=>k.isPlayer).every(k=>k.finished)) {
       this._playerOverTimer += dt;
       done = this._playerOverTimer >= RACE.resultsDelay;
     }

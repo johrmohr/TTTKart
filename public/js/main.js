@@ -22,7 +22,9 @@ import * as THREE from 'three';
 import { RACE, PHYS, DIFFICULTY, GAME_TITLE, NET, ITEM_IDS, HIT } from './config.js';
 import { bus } from './bus.js';
 import { clamp, damp, lerp } from './utils.js';
-import { getTrack } from './track.js';
+import { getTrack, Track } from './track.js';
+import { SPEEDWAY_DEF } from './track-def.js';
+import { Party, equippedCharacter, viewports } from './party.js';
 import { buildWorld, LIGHTHOUSE } from './world.js';
 import { Kart, resolveKartCollisions } from './kart.js';
 import { CHARACTERS, buildKartModel, disposeKartModel } from './characters.js';
@@ -96,7 +98,10 @@ async function loadRaceModules() {
 // =============================================================== 1. boot
 
 let renderer, scene, camera, track, world, effects, chase, audio, input, hud, menus, phone;
-let showroom, attract, startLights;
+let showroom, attract, startLights, party;
+let links = [], raceSlots = [], chosenMap = "bay", currentMap = "bay";
+const homeButton = document.createElement("button");
+homeButton.className="race-home";homeButton.textContent="Ⅱ Pause / Menu";homeButton.hidden=true;document.body.append(homeButton);homeButton.onclick=()=>pause();
 
 const app = {
   state: 'boot',          // 'boot' | 'title' | 'select' | 'race' | 'paused' | 'results'
@@ -146,9 +151,16 @@ async function boot() {
   window.addEventListener('keydown', unlock, true);
   window.addEventListener('touchstart', unlock, { capture: true, passive: true });
 
-  phone = new PhoneLink();
+  links = [0,1,2,3].map(i=>new PhoneLink(i));
+  phone = links[0];
   input = new Input({ phone });
+  party = new Party(links, {launch:(slots,map)=>{raceSlots=slots;chosenMap=map;app.selected=slots[0].character;startRace();},sync:()=>syncPhone(),preview:i=>showroom?.setCharacter(i)});
   wirePhone();
+  links.forEach((link,i)=>{
+    if(i>0) link.on('menu',m=>{if(!party.menu(i,m)) {if(['pause','resume','quit','menu'].includes(m.action)) action(m.action,m,'phone');}});
+    link.on('leave',()=>{if(R?.players.some(p=>p.slot.index===i)&&app.state==='race')pause();});
+    if(i>0) link.connect().then(()=>syncPhone()).catch(err=>console.warn('Player '+(i+1)+' phone link: '+err.message));
+  });
   phone.connect().then((info) => {
     menus.setPhone({ status: 'online', ...info, connected: phone.connected });
     syncPhone();
@@ -182,7 +194,7 @@ async function boot() {
     if (document.hidden && app.state === 'race') pause();
   });
   window.addEventListener('blur', () => {
-    if (app.state === 'race' && input.lastSource !== 'phone') pause();
+    if (app.state === 'race' && !R?.players.some(p=>p.slot.link.connected)) pause();
   });
 
   // Compile every material once before the first visible frame (avoids a hitch).
@@ -434,12 +446,15 @@ function renderPortraits() {
     const m = buildKartModel(def, { lod: 'high' });
     sc.add(m);
     r.render(sc, cam);
-    menus.setThumbnail(def.id, cv.toDataURL('image/png'));
+    const thumbnail = cv.toDataURL('image/png');
+    menus.setThumbnail(def.id, thumbnail);
+    party.thumbnails.set(def.id, thumbnail);
     sc.remove(m);
     disposeKartModel(m);
   }
   r.dispose();
   r.forceContextLoss();
+  party.render();
 }
 
 // =============================================================== 3. AttractCam
@@ -571,6 +586,7 @@ class StartLights {
 
 function setScreen(state) {
   app.state = state;
+  homeButton.hidden = state !== 'race' && state !== 'paused';
   // the controls overlay belongs to the screen it was opened on (the phone can
   // start / restart a race while it is up on the desktop)
   menus.toggleHelp(false);
@@ -586,17 +602,14 @@ function goTitle(first = false) {
   audio.startMusic('menu');
   if (!first) menus.dip();
   setScreen('title');
+  menus.show('race');
+  party.show('title');
+  homeButton.hidden=true;
 }
 
 function goSelect() {
-  teardownRace();
-  showroom.setMode('select');
-  setFraming(SELECT_FRAMING, true);
-  audio.startMusic('menu');
-  menus.setSelected(app.selected);
-  menus.setDifficulty(app.difficulty);
-  menus.dip();
-  setScreen('select');
+  goTitle();
+  party.show('lobby');
 }
 
 function pause() {
@@ -625,6 +638,7 @@ function resume() {
  * (`pad:menu`, SPEC §11) lands here.
  */
 function action(name, payload = {}, source = 'ui') {
+  if (party?.visible && ['start','go','select'].includes(name)) {party.menu(0,{...payload,action:name});return;}
   const st = app.state;
   switch (name) {
     case 'start':
@@ -700,6 +714,7 @@ function action(name, payload = {}, source = 'ui') {
 // Keyboard / gamepad: pause toggles first (Esc is both pause and back), then menus.
 function handleInput() {
   const st = app.state;
+  if(party?.visible){if(input.menu.back)party.back();return;}
   if (st === 'race') {
     if (input.pausePressed) pause();
     return;
@@ -737,21 +752,33 @@ function tryCreate(key, fn) {
 
 function startRace() {
   teardownRace();
-  const def = CHARACTERS[app.selected];
+  party.hide();
+  if(!raceSlots.length)raceSlots=[{...party.slots[0],character:app.selected}];
+  if(currentMap!==chosenMap){
+    showroom.dispose();world.dispose();
+    track=chosenMap==='sahur'?new Track(SPEEDWAY_DEF):getTrack();
+    world=buildWorld(scene,track,{renderer,quality:QUALITY});
+    showroom=new Showroom(scene,track);attract=new AttractCam(camera,track,world);hud.setTrack(track);
+    currentMap=chosenMap;
+  }
   const diffKey = DIFFICULTY[app.difficulty] ? app.difficulty : 'normal';
   const diff = DIFFICULTY[diffKey];
 
-  // ---- karts: player in RACE.playerGridSlot, the other 7 shuffled into the rest
-  const cpuDefs = shuffle(CHARACTERS.filter((c) => c !== def));
+  const cpuDefs = shuffle(CHARACTERS.slice());
   const karts = new Array(RACE.racers);
-  const player = new Kart({ id: def.id, character: def, track, isPlayer: true });
-  const playerSlot = clamp(RACE.playerGridSlot, 0, RACE.racers - 1);
-  karts[playerSlot] = player;
-  let ci = 0;
-  for (let slot = 0; slot < RACE.racers; slot++) {
-    if (slot === playerSlot) continue;
-    const c = cpuDefs[ci++ % cpuDefs.length];
-    karts[slot] = new Kart({ id: c.id, character: c, track, isPlayer: false });
+  const players=raceSlots.map((slot,i)=>{
+    const character=equippedCharacter(slot);
+    const kart=new Kart({id:`player${slot.index}`,character,track,isPlayer:true});
+    karts[RACE.racers-1-i]=kart;
+    const cam=i===0?camera:new THREE.PerspectiveCamera(60,1,.1,2000);
+    const controller=i===0?chase:new ChaseCamera(cam);controller.setTarget(kart);controller.snap();
+    return {slot,kart,camera:cam,chase:controller,itemSeq:slot.link.input.itemSeq,pauseSeq:slot.link.input.pauseSeq};
+  });
+  const player=players[0].kart;
+  let ci=0;
+  for(let slot=0;slot<karts.length;slot++) if(!karts[slot]) {
+    const c=cpuDefs[ci++ % cpuDefs.length];
+    karts[slot]=new Kart({id:`cpu${slot}`,character:c,track,isPlayer:false});
   }
   karts.forEach((k, slot) => { k.placeOnGrid(track.gridSlot(slot)); k.frozen = true; });
 
@@ -770,7 +797,7 @@ function startRace() {
         const offsets = shuffle([-0.12, -0.08, -0.04, 0, 0.04, 0.08, 0.12]);
         let oi = 0;
         for (const k of karts) {
-          if (k === player) continue;
+          if (k.isPlayer) continue;
           const skill = clamp(diff.aiSkill + offsets[oi++ % offsets.length], 0.15, 1);
           drivers.push(new AIDriver(k, { track, difficulty: diffKey, skill, rng: Math.random }));
         }
@@ -792,7 +819,7 @@ function startRace() {
   chase.setTarget(player);
 
   R = {
-    karts, player, items, race, drivers, views,
+    karts, player, players, items, race, drivers, views,
     difficulty: diffKey,
     offs: [],
     autopilot: false,
@@ -819,6 +846,8 @@ function startRace() {
   audio.setEngineActive(true);
   menus.dip();
   setScreen('race');
+  homeButton.hidden=false;
+  renderer.setPixelRatio(Math.min(players.length>1?1.25:2,window.devicePixelRatio||1));
 
   if (race) {
     try {
@@ -858,8 +887,11 @@ function teardownRace() {
   if (!R) return;
   const r = R;
   R = null;
+  if(party)party.overlay.hidden=true;
+  homeButton.hidden=true;
   for (const off of r.offs) off();
   r.offs.length = 0;
+  for (const p of r.players.slice(1))p.chase.dispose();
   for (const v of r.views) v.dispose();
   for (const d of r.drivers) if (d && typeof d.dispose === 'function') { try { d.dispose(); } catch { /* ignore */ } }
   if (r.items) { try { r.items.dispose(); } catch (err) { console.error('[main] items.dispose failed', err); } }
@@ -904,7 +936,7 @@ function raceFrame(dt) {
   r.frames++;
 
   // ---- player input (once per frame, before the substeps)
-  if (!r.autopilot && app.state === 'race') {
+  if (!r.autopilot && app.state === 'race' && r.players.length===1 && r.players[0].slot.index===0) {
     const pi = P.input;
     pi.steer = input.steer;
     pi.throttle = input.throttle;
@@ -914,6 +946,20 @@ function raceFrame(dt) {
     chase.lookBack = input.lookBack;
   } else {
     chase.lookBack = false;
+  }
+
+  if(app.state==='race') for(const p of r.players){
+    if(p.kart.finished)continue;
+    const link=p.slot.link, src=link.input;
+    if(r.players.length>1 || p.slot.index!==0){
+      p.kart.input.steer=link.active?src.steer:0;
+      p.kart.input.throttle=link.active?src.gas:0;
+      p.kart.input.brake=link.active?src.brake:1;
+      p.kart.input.drift=link.active&&!!src.drift;
+      if(src.itemSeq>p.itemSeq)p.kart.input.useItem=true;
+      if(src.pauseSeq>p.pauseSeq)pause();
+    }
+    p.itemSeq=src.itemSeq;p.pauseSeq=src.pauseSeq;
   }
 
   // ---- intro skip
@@ -932,10 +978,13 @@ function raceFrame(dt) {
   // ---- views + camera
   for (let i = 0; i < r.views.length; i++) r.views[i].update(simDt, camera);
   chase.update(simDt);
+  for(const p of r.players.slice(1))p.chase.update(simDt);
 
   // ---- HUD + engine audio
   r.hudCtx.phoneConnected = phone.connected;
   hud.update(app.state === 'paused' ? 0 : dt, r.hudCtx);
+  if(r.players.length>1)hud.hide();
+  party.updateHUD(r.players,r.race,app.state==='paused');
   const e = r.engine;
   e.speed = P.speed; e.maxSpeed = P.maxSpeed; e.throttle = P.input.throttle;
   e.drifting = P.drift.active; e.boosting = P.boostTimer > 0; e.grounded = P.grounded;
@@ -945,7 +994,7 @@ function raceFrame(dt) {
   // ---- end of race → results
   if (app.state === 'race') {
     const now = r.clock;
-    if ((r.overAt >= 0 && now - r.overAt >= RESULTS_AFTER_OVER) || (r.finishedAt >= 0 && now - r.finishedAt >= RESULTS_FAILSAFE)) showResults();
+    if ((r.overAt >= 0 && now - r.overAt >= RESULTS_AFTER_OVER) || (r.players.length===1 && r.finishedAt >= 0 && now - r.finishedAt >= RESULTS_FAILSAFE)) showResults();
   }
 
   // ---- phone mirror (race fields): immediately on change, else at PHONE_SYNC_HZ
@@ -1024,7 +1073,7 @@ function showResults() {
     time: x.time,
     finished: x.finished !== false,
     bestLap: x.bestLap,
-    isPlayer: x.kart === r.player,
+    isPlayer: x.kart.isPlayer,
   }));
   presentResults(rows, `${track.name} · ${DIFFICULTY[r.difficulty].label} · ${r.race ? r.race.laps : RACE.laps} laps`);
   if (chase.mode !== 'orbit') chase.startOrbit();
@@ -1130,7 +1179,10 @@ function subscribeRaceEvents() {
     audio.setMusicIntensity(1);
     banner('FINAL LAP!', { color: '#ff5a3c', duration: 2 }, 2);
   });
-  on('race:finish', (e) => { if (isP(e.kart)) onPlayerFinish(e.place); });
+  on('race:finish', (e) => {
+    if(isP(e.kart))onPlayerFinish(e.place);
+    else if(e.kart.isPlayer && RaceMods.AIDriver)r.drivers.push(new RaceMods.AIDriver(e.kart,{track,difficulty:r.difficulty,skill:.8}));
+  });
   on('race:wrongWay', (e) => { if (isP(e.kart)) hud.setWrongWay(e.on); });
   on('race:over', () => { if (r.overAt < 0) r.overAt = r.clock; });
 
@@ -1222,38 +1274,24 @@ function wirePhone() {
     if (app.state === 'race' && input.lastSource === 'phone') pause();
     if (app.state !== 'race') menus.toast('Phone disconnected', { icon: '📵', tone: 'warn' });
   });
-  phone.on('menu', (m) => action(m.action, m, 'phone'));
+  phone.on('menu', (m) => {if(!party.menu(0,m))action(m.action,m,'phone');});
   phone.on('info', (info) => { menus.setPhone({ status: 'online', ...info }); syncPhone(); });
   phone.on('status', (s) => { if (s && s.socketConnected === false) menus.setPhone({ status: 'connecting' }); else if (phone.room) menus.setPhone({ status: 'online' }); });
 }
 
 /** host:state mirror for the phone (net.js dedupes unchanged states). */
 function syncPhone() {
-  if (!phone) return;
-  const screen = PHONE_SCREEN[app.state] || 'loading';
-  let race = null;
-  if (R && (screen === 'race' || screen === 'paused')) {
-    const pr = R.phoneRace, P = R.player, rc = R.race;
-    pr.state = rc ? rc.state : 'racing';
-    pr.laps = rc ? rc.laps : RACE.laps;
-    pr.lap = clamp(P.lap || 1, 1, pr.laps);
-    pr.place = P.place || 0;
-    pr.racers = R.karts.length;
-    pr.item = P.item || null;
-    pr.itemCount = P.itemCount || 0;
-    pr.rolling = !!P.rolling;
-    pr.countdown = rc && rc.state === 'countdown' ? Math.ceil(rc.countdown || 0) : 0;
-    pr.finished = !!P.finished;
-    race = pr;
+  if (!phone || !party) return;
+  for(let i=0;i<links.length;i++) {
+    const link=links[i];
+    if(party.visible){link.sendState({...party.phoneState(i),difficulty:app.difficulty});continue;}
+    const p=R?.players.find(p=>p.slot.index===i);
+    if(!p){link.sendState({screen:'loading'});continue;}
+    const k=p.kart,rc=R.race;
+    link.sendState({screen:PHONE_SCREEN[app.state]||'loading',characters:phoneChars,selected:p.slot.character,difficulty:app.difficulty,
+      race:{state:rc?.state||'racing',laps:rc?.laps||3,lap:clamp(k.lap||1,1,3),place:k.place||0,racers:R.karts.length,item:k.item||null,itemCount:k.itemCount||0,rolling:!!k.rolling,countdown:rc?.state==='countdown'?Math.ceil(rc.countdown):0,finished:!!k.finished,drunkSeconds:k.drunkTimer},
+      results:app.state==='results'?phoneResults:null});
   }
-  phone.sendState({
-    screen,
-    characters: phoneChars,
-    selected: app.selected,
-    difficulty: app.difficulty,
-    race,
-    results: screen === 'results' ? phoneResults : null,
-  });
 }
 
 // =============================================================== 7. main loop
@@ -1302,7 +1340,13 @@ function frame(dt) {
     hintTimer = 0.4;
     menus.setSoundHint(!audio.ready && app.state !== 'boot');
   }
-  renderer.render(scene, camera);
+  if(R && R.players.length>1 && ['race','paused','results'].includes(app.state)) {
+    const w=window.innerWidth,h=window.innerHeight,rects=viewports(R.players.length,w,h);
+    renderer.setScissorTest(false);renderer.setViewport(0,0,w,h);renderer.clear();renderer.setScissorTest(true);
+    R.players.forEach((p,i)=>{const v=rects[i];p.camera.clearViewOffset();p.camera.aspect=v.w/v.h;p.camera.updateProjectionMatrix();renderer.setViewport(v.x,v.y,v.w,v.h);renderer.setScissor(v.x,v.y,v.w,v.h);renderer.render(scene,p.camera);});
+    renderer.setScissorTest(false);renderer.setViewport(0,0,w,h);
+  } else {camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.render(scene,camera);}
+
   const cost = performance.now() - t0;
   frameCost.ms += (cost - frameCost.ms) * 0.05;
   frameCost.max = Math.max(frameCost.max * 0.995, cost);
@@ -1325,6 +1369,8 @@ const FAKE_RESULTS = () => {
 };
 
 window.__game = {
+  get party() {return party;},
+  get players(){return R?.players||[];},
   get state() { return app.state; },
   get track() { return track; },
   get race() { return R ? R.race : null; },
@@ -1334,13 +1380,14 @@ window.__game = {
   get selected() { return app.selected; },
   get difficulty() { return app.difficulty; },
   get timeScale() { return app.timeScale; },
-  quickRace(charId = 'blaze', difficulty = 'normal') {
+  quickRace(charId = 'sahur', difficulty = 'normal') {
     const i = CHARACTERS.findIndex((c) => c.id === charId);
     app.selected = i >= 0 ? i : 0;
     app.difficulty = DIFFICULTY[difficulty] ? difficulty : 'normal';
     menus.setSelected(app.selected);
     menus.setDifficulty(app.difficulty);
     showroom.setCharacter(app.selected, true);
+    raceSlots=[{...party.slots[0],character:app.selected}];chosenMap='bay';
     startRace();
     return true;
   },

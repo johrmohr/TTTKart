@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import { Kart } from '../public/js/kart.js';
+import { CHARACTERS } from '../public/js/characters.js';
+import { Track } from '../public/js/track.js';
+import { SPEEDWAY_DEF } from '../public/js/track-def.js';
+import { ItemSystem } from '../public/js/items.js';
+import { Race } from '../public/js/race.js';
+import { ITEM_IDS,ITEM_TABLE } from '../public/js/config.js';
+import { viewports,equippedCharacter } from '../public/js/party.js';
+const tr=new Track(SPEEDWAY_DEF);
+assert.ok(tr.length>650&&tr.length<700);
+for(const n of [1,2,3,4]){const vs=viewports(n,1281,721);assert.equal(vs.length,n===3?4:n);assert.equal(vs.reduce((s,v)=>s+v.w*v.h,0),1281*721);}
+assert.ok(ITEM_TABLE.every(row=>row.length===ITEM_IDS.length&&row.at(-1)>0));
+const karts=CHARACTERS.slice(0,4).map((character,i)=>new Kart({id:i,character,track:tr,isPlayer:i<2}));
+karts.forEach((k,i)=>k.placeOnGrid(tr.gridSlot(i)));
+const items=new ItemSystem({track:tr,karts});
+karts[0].item='beer';karts[0].itemCount=1;karts[3].startStar();
+assert.equal(items.useItem(karts[0]),true);assert.equal(karts[0].drunkTimer,0);assert.equal(karts[1].drunkTimer,6);assert.equal(karts[2].drunkTimer,6);assert.equal(karts[3].drunkTimer,0);assert.equal(karts[0].item,null);
+const k=karts[1];k.input.throttle=1;for(let i=0;i<240;i++)k.update(1/120);assert.notEqual(k.yaw,tr.gridSlot(1).yaw,'Beer changes actual steering');
+for(let i=0;i<600;i++)k.update(1/120);assert.equal(k.drunkTimer,0);
+k.drunkTimer=6;k.startStar();assert.equal(k.drunkTimer,0);
+k.drunkTimer=6;k.placeOnGrid(tr.gridSlot(1));assert.equal(k.drunkTimer,0);
+const race=new Race({track:tr,karts,player:karts[0]});race.playerFinished=true;karts[0].finished=true;race._checkOver(20);assert.equal(race.over,false,'Do not end while another human races');karts[1].finished=true;race._checkOver(20);assert.equal(race.over,true);
+const standard=equippedCharacter({character:0,body:0,wheels:0});const custom=equippedCharacter({character:0,body:1,wheels:2});assert.notDeepEqual(standard.ratings,custom.ratings);assert.equal(custom.body,'speedster');
+items.dispose();console.log('Party tests passed: split layouts, new map, loadouts, beer, human finish gating.');

@@ -700,6 +700,7 @@ export class AIDriver {
     switch (item) {
       case 'star':
         return true;
+      case 'beer':
       case 'zap':
         if (place >= 3) return true;
         return place === 2 && hold > 3.5;
@@ -793,7 +794,7 @@ export class AIDriver {
  */
 export function createAIDrivers(karts, { track, difficulty = 'normal', rng = Math.random, player = null, skillSpread = 0.12 } = {}) {
   const diff = DIFFICULTY[difficulty] || DIFFICULTY.normal;
-  const cpus = karts.filter((k) => k !== player);
+  const cpus = karts.filter((k) => k !== player && !k.isPlayer);
   const n = cpus.length;
   const offsets = [];
   for (let i = 0; i < n; i++) offsets.push(n > 1 ? -skillSpread + (2 * skillSpread * i) / (n - 1) : 0);

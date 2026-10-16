@@ -29,7 +29,7 @@ import { bus } from './bus.js';
 import { clamp, damp, TAU } from './utils.js';
 
 export const VIEW_TUNE = {
-  driftYaw: 0.3,            // extra visual yaw while drifting (rad), on top of the physical slip
+  driftYaw: 0.19,            // extra visual yaw while drifting (rad), on top of the physical slip
   driftYawRate: 7,
   steerAngle: 0.42,         // max visual front-wheel angle (rad)
   steerRate: 14,

@@ -25,8 +25,8 @@ import { io as ioClient } from 'socket.io-client';
 import { startFakeHost } from './pad-host.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const PORT = 3100;
-const HTTPS_PORT = 3543;
+const PORT = 3103;
+const HTTPS_PORT = 3544;
 const ROOM = 'PADT';
 const PAD_URL = `https://localhost:${HTTPS_PORT}/pad?room=${ROOM}`;
 const argv = process.argv.slice(2);
@@ -67,18 +67,18 @@ function expectedTheta(ux, uy) {
   return w * Math.atan2(-ux, uy) / D + (1 - w) * flat;
 }
 
-// Pad steering for an angle (dead zone 2°, lock 32°, expo 0.35).
-function shapedSteer(theta, lockDeg = 32) {
+// Pad steering for an angle (dead zone 3.5°, lock 45°, expo 0.52).
+function shapedSteer(theta, lockDeg = 45) {
   const mag = Math.abs(theta);
-  if (mag <= 2) return 0;
-  let x = Math.min(1, (mag - 2) / (lockDeg - 2));
-  x = 0.65 * x + 0.35 * x * x * x;
+  if (mag <= 3.5) return 0;
+  let x = Math.min(1, (mag - 3.5) / (lockDeg - 3.5));
+  x = 0.48 * x + 0.52 * x * x * x;
   return Math.sign(theta) * x;
 }
 
 // Expected pad steering for a wheel rotated phiDeg clockwise with the screen
 // tilted back tauDeg.
-function expectedSteer(phiDeg, tauDeg, calibDeg = 0, lockDeg = 32) {
+function expectedSteer(phiDeg, tauDeg, calibDeg = 0, lockDeg = 45) {
   const D = Math.PI / 180;
   const c = Math.cos(tauDeg * D);
   return shapedSteer(expectedTheta(-Math.sin(phiDeg * D) * c, Math.cos(phiDeg * D) * c) - calibDeg, lockDeg);
@@ -334,10 +334,10 @@ async function orientationScenario(browser, host, cfg) {
       p = await ph.pad();
       check(`${L} wheel 20° with the screen tilted back 50° → same steer as at 15°`, near(p.steer, upright, 0.02) && near(p.steer, expectedSteer(20, 50, p.calib), 0.03),
         `${fmt(p.steer)} vs ${fmt(upright)} (old asin math: ${fmt(shapedSteer(Math.asin(Math.cos(50 * Math.PI / 180) * Math.sin(20 * Math.PI / 180)) * 180 / Math.PI))})`);
-      await ph.eval(() => window.__tilt.set(34, 56));
+      await ph.eval(() => window.__tilt.set(50, 56));
       await sleep(450);
       p = await ph.pad();
-      check(`${L} wheel 34° tilted back 56° → full lock`, p.steer > 0.97, fmt(p.steer));
+      check(`${L} wheel 50° tilted back 56° → full lock`, p.steer > 0.97, fmt(p.steer));
     }
     // Flat tilting: phone lying almost flat, right edge dipped 15° → steer right.
     for (const r of [15, -15]) {
@@ -381,7 +381,7 @@ async function orientationScenario(browser, host, cfg) {
     await ph.eval(() => window.__tilt.set(0, 15));
     await sleep(350);
     p = await ph.pad();
-    check(`${L} after auto-center, level wheel steers left a bit`, p.steer < -0.05, fmt(p.steer));
+    check(`${L} after auto-center, level wheel steers left a bit`, p.steer < -0.02, fmt(p.steer));
     await ph.tap('#btn-center');
     await sleep(300);
     p = await ph.pad();
@@ -399,7 +399,7 @@ async function orientationScenario(browser, host, cfg) {
     await sleep(400);
     let last = host.logs.last;
     const pressedCls = await ph.eval(() => ['btn-gas', 'btn-drift', 'btn-brake'].map((id) => document.getElementById(id).classList.contains('pressed')));
-    check(`${L} GAS + DRIFT held together → host g=1 d=1, steering right`, last && last.g === 1 && last.d === 1 && last.b === 0 && last.s > 0.3, JSON.stringify(last));
+    check(`${L} GAS + DRIFT held together → host g=1 d=1, steering right`, last && last.g === 1 && last.d === 1 && last.b === 0 && near(last.s, expectedSteer(20, 15), 0.03), JSON.stringify(last));
     check(`${L} pressed visuals on GAS + DRIFT only`, pressedCls.join() === 'true,true,false', pressedCls.join());
     await ph.shot('5-race-pressed');
     const seq0 = last.i;
@@ -479,11 +479,11 @@ async function orientationScenario(browser, host, cfg) {
     await ph.eval(() => window.__tilt.set(20, 15));
     await sleep(400);
     p = await ph.pad();
-    check(`${L} invert steering flips the sign`, p.steer < -0.3, fmt(p.steer));
+    check(`${L} invert steering flips the sign`, near(p.steer, -expectedSteer(20, 15, p.calib), 0.03), fmt(p.steer));
     await ph.tap('#set-invert');
     await sleep(400);
     p = await ph.pad();
-    check(`${L} invert off again`, p.steer > 0.3, fmt(p.steer));
+    check(`${L} invert off again`, near(p.steer, expectedSteer(20, 15, p.calib), 0.03), fmt(p.steer));
     await ph.tap('#btn-sheet-close');
     await sleep(300);
     await ph.eval(() => window.__tilt.set(0, 15));
@@ -678,7 +678,7 @@ async function extraScenarios(browser, host, info) {
     await ph.down(1, '#btn-gas');
     await ph.eval(() => window.__tilt.set(25, 15));
     await sleep(400);
-    check('hidden: driving before (GAS held, steering)', host.logs.last?.g === 1 && host.logs.last.s > 0.3, JSON.stringify(host.logs.last));
+    check('hidden: driving before (GAS held, steering)', host.logs.last?.g === 1 && near(host.logs.last.s, expectedSteer(25, 15), 0.03), JSON.stringify(host.logs.last));
     const menus0 = host.logs.menus.length;
     await ph.setHidden(true);
     await sleep(250);

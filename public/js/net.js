@@ -75,11 +75,11 @@ function clampSteer(v) {
 
 // This tab's own room (sessionStorage) first, else the room the phone was last
 // paired with (localStorage: a closed tab that is opened again).
-function readStoredRoom() {
+function readStoredRoom(suffix = "") {
   for (const [name, shared] of [['sessionStorage', false], ['localStorage', true]]) {
     try {
       const store = globalThis[name];
-      const raw = store?.getItem(STORAGE_KEY) || store?.getItem(LEGACY_STORAGE_KEY);
+      const raw = store?.getItem(STORAGE_KEY + suffix);
       if (!raw) continue;
       const v = JSON.parse(raw);
       const room = normalizeRoomCode(v?.room);
@@ -89,11 +89,11 @@ function readStoredRoom() {
   return null;
 }
 
-function writeStoredRoom(room, key, shared = false) {
+function writeStoredRoom(room, key, shared = false, suffix = "") {
   const json = JSON.stringify({ room, key });
-  try { globalThis.sessionStorage?.setItem(STORAGE_KEY, json); globalThis.sessionStorage?.removeItem(LEGACY_STORAGE_KEY); } catch { /* storage blocked */ }
+  try { globalThis.sessionStorage?.setItem(STORAGE_KEY + suffix, json); globalThis.sessionStorage?.removeItem(LEGACY_STORAGE_KEY); } catch { /* storage blocked */ }
   if (shared) {
-    try { globalThis.localStorage?.setItem(STORAGE_KEY, json); globalThis.localStorage?.removeItem(LEGACY_STORAGE_KEY); } catch { /* storage blocked */ }
+    try { globalThis.localStorage?.setItem(STORAGE_KEY + suffix, json); globalThis.localStorage?.removeItem(LEGACY_STORAGE_KEY); } catch { /* storage blocked */ }
   }
 }
 
@@ -141,7 +141,8 @@ function loadSocketIoClient() {
 }
 
 export class PhoneLink {
-  constructor() {
+  constructor(slot = 0) {
+    this.storageSuffix = `.player${slot}`;
     this.room = null;
     this.padUrl = null;
     this.qrSvg = null;
@@ -220,7 +221,7 @@ export class PhoneLink {
 
   async _connect() {
     const ioFn = await loadSocketIoClient();
-    const stored = readStoredRoom();
+    const stored = readStoredRoom(this.storageSuffix);
     if (stored && !this.room) { this.room = stored.room; this._key = stored.key; this._vacantOnly = stored.shared; }
 
     return new Promise((resolve, reject) => {
@@ -281,7 +282,7 @@ export class PhoneLink {
         this._resetSignal();
         const wasConnected = this.connected;
         this.connected = true;
-        if (this.room) writeStoredRoom(this.room, this._key, true);   // the phone's room: reopen-able
+        if (this.room) writeStoredRoom(this.room, this._key, true, this.storageSuffix);   // the phone's room: reopen-able
         this._emit('join', { padId: this.padId, rejoin: wasConnected });
         this._flushState(true);          // give the pad our current screen right away
       });
@@ -346,7 +347,7 @@ export class PhoneLink {
     if (typeof res.padUrl === 'string') this.padUrl = res.padUrl;
     if (typeof res.qrSvg === 'string') this.qrSvg = res.qrSvg;
     if (Array.isArray(res.lanIps)) this.lanIps = res.lanIps.filter((ip) => typeof ip === 'string');
-    if (this.room) writeStoredRoom(this.room, this._key, !!res.padConnected);
+    if (this.room) writeStoredRoom(this.room, this._key, !!res.padConnected, this.storageSuffix);
     const info = this._info();
     if (notify && changed) this._emit('info', info);
     return info;

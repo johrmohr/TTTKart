@@ -1,7 +1,7 @@
 // Shared tuning constants — the single source of truth for numbers that more
 // than one module depends on. Node-safe (no DOM access).
 
-export const GAME_TITLE = 'KRISHIV KART';
+export const GAME_TITLE = 'TTT KART';
 
 export const RACE = {
   laps: 3,
@@ -59,9 +59,10 @@ export const BOOST = {
 export const STAR = { duration: 7.5 };
 
 // Item ids — every module must use exactly these strings.
-export const ITEM_IDS = ['banana', 'bouncer', 'rocket', 'toot', 'triple_toot', 'stink', 'star', 'zap'];
+export const ITEM_IDS = ['banana', 'bouncer', 'rocket', 'toot', 'triple_toot', 'stink', 'star', 'zap', 'beer'];
 
 export const ITEM_INFO = {
+  beer: { name: 'Beer Blitz', icon: '🍺', color: '#ffc451', uses: 1 },
   banana:      { name: 'Banana Peel',  icon: '🍌', color: '#ffd93b', uses: 1 },
   bouncer:     { name: 'Bouncer',      icon: '🟢', color: '#3ddc5a', uses: 1 },
   rocket:      { name: 'Homing Rocket', icon: '🚀', color: '#ff4b3e', uses: 1 },
@@ -76,14 +77,14 @@ export const ITEM_INFO = {
 // Order of columns matches ITEM_IDS.
 //                 banana bouncer rocket toot triple stink star zap
 export const ITEM_TABLE = [
-  /* 1st */      [  35,    25,     5,    10,   0,    25,   0,   0 ],
-  /* 2nd */      [  20,    25,    20,    15,   5,    15,   0,   0 ],
-  /* 3rd */      [  12,    20,    25,    20,  10,    10,   3,   0 ],
-  /* 4th */      [   8,    15,    25,    22,  15,     7,   6,   2 ],
-  /* 5th */      [   5,    10,    22,    22,  22,     5,  10,   4 ],
-  /* 6th */      [   2,     8,    20,    20,  27,     3,  14,   6 ],
-  /* 7th */      [   0,     5,    15,    18,  32,     0,  20,  10 ],
-  /* 8th */      [   0,     3,    10,    15,  35,     0,  25,  12 ],
+  /* 1st */      [  35,    25,     5,    10,   0,    25,   0,   0 , 8 ],
+  /* 2nd */      [  20,    25,    20,    15,   5,    15,   0,   0 , 8 ],
+  /* 3rd */      [  12,    20,    25,    20,  10,    10,   3,   0 , 8 ],
+  /* 4th */      [   8,    15,    25,    22,  15,     7,   6,   2 , 8 ],
+  /* 5th */      [   5,    10,    22,    22,  22,     5,  10,   4 , 8 ],
+  /* 6th */      [   2,     8,    20,    20,  27,     3,  14,   6 , 8 ],
+  /* 7th */      [   0,     5,    15,    18,  32,     0,  20,  10 , 8 ],
+  /* 8th */      [   0,     3,    10,    15,  35,     0,  25,  12 , 8 ],
 ];
 
 export const ITEM = {

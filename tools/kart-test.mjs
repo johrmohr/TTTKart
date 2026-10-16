@@ -128,8 +128,8 @@ for (const c of CHARACTERS) {
 }
 {
   const flying = (id) => lapResults[id].a.lapTimes[1];
-  ok(flying('duke') < flying('pip'), 'top-speed Duke should beat Pip on a flying lap');
-  ok(flying('bolt') < flying('gus'), 'Bolt should beat Gus on a flying lap');
+  ok(flying('crocodilo') < flying('cappuccina'), 'top-speed Crocodilo should beat Cappuccina on a flying lap');
+  ok(flying('tralalero') < flying('patapim'), 'Tralalero should beat Patapim on a flying lap');
 }
 if (QUICK) { console.log(`\n${failures ? 'FAILED' : 'PASSED'} (${failures} failures)`); process.exit(failures ? 1 : 0); }
 
@@ -173,14 +173,15 @@ for (const c of CHARACTERS) {
   const slip = Math.atan2(k.velocity.x * -Math.cos(k.yaw) + k.velocity.z * Math.sin(k.yaw), k.speed);
   console.log(`${c.id.padEnd(6)} 0-90%: ${f2(t)} s | full-lock radius @top: ${f1(radius)} m | tight drift radius: ${f1(dr)} m (slip ${f1(slip * 57.3)} deg, speed ${f1(k.horizontalSpeed)})`);
   ok(t > 1.4 && t < 4.0, `${c.id}: 0-90% time ${f2(t)} out of range`);
-  ok(radius > 15 && radius < 24, `${c.id}: full-lock radius ${f1(radius)} out of 15-24`);
-  ok(dr > 9 && dr < 15, `${c.id}: tight drift radius ${f1(dr)} out of 9-15`);
+  // Calmer steering: 15–29m full lock; drift arcs open to 13–20m.
+  ok(radius > 15 && radius < 29, `${c.id}: full-lock radius ${f1(radius)} out of 15-29`);
+  ok(dr > 13 && dr < 20, `${c.id}: tight drift radius ${f1(dr)} out of 13-20`);
 }
 
 // ------------------------------------------------------------- 3. airtime
 console.log('\n== 3. Airtime at the hill crest and kicker ramp');
 for (const [label, sStart, lat, boost] of [['hill @top', 300, 0, false], ['hill boosted', 330, 0, true], ['ramp @top', 640, 0, false], ['ramp via pad', 672, 0, false]]) {
-  const k = makeKart('blaze');
+  const k = makeKart('sahur');
   setAt(k, sStart, lat, k.stats.topSpeed);
   k.input.throttle = 1;
   if (boost) k.applyBoost(3, 'item');
@@ -203,7 +204,7 @@ for (const [label, sStart, lat, boost] of [['hill @top', 300, 0, false], ['hill 
 // --------------------------------------------------------------- 4. drift
 console.log('\n== 4. Drift through Turn 1 and the hairpin (auto-drift)');
 for (const [label, s0, s1] of [['Turn 1', 60, 160], ['Hairpin', 375, 470]]) {
-  for (const id of ['blaze', 'duke', 'gus']) {
+  for (const id of ['sahur', 'crocodilo', 'patapim']) {
     const k = makeKart(id);
     const ap = new Autopilot(k, { drift: true });
     setAt(k, s0, track.frameAt(s0).racingLine, k.stats.topSpeed);
@@ -222,7 +223,7 @@ for (const [label, s0, s1] of [['Turn 1', 60, 160], ['Hairpin', 375, 470]]) {
 }
 {
   // manual: hop without steering = just a hop, no drift
-  const k = makeKart('blaze');
+  const k = makeKart('sahur');
   setAt(k, 5, 0, 25);
   events.length = 0;
   k.input.throttle = 1; k.input.drift = true; k.input.steer = 0; k._driftHeld = false;
@@ -250,7 +251,7 @@ for (const [label, s0, s1] of [['Turn 1', 60, 160], ['Hairpin', 375, 470]]) {
 // ------------------------------------------------------------- 5. offroad
 console.log('\n== 5. Offroad slowdown');
 {
-  const k = makeKart('blaze');
+  const k = makeKart('sahur');
   // start straight: grass from halfWidth+1 to wall; drive parallel on grass
   const f = track.frameAt(20);
   setAt(k, 20, f.halfWidth + 3.5, k.stats.topSpeed);
@@ -275,7 +276,7 @@ console.log('\n== 5. Offroad slowdown');
 // ----------------------------------------------------------- 6. boost pad
 console.log('\n== 6. Boost pads');
 for (const pad of track.boostPads) {
-  const k = makeKart('pip');
+  const k = makeKart('cappuccina');
   setAt(k, pad.s0 - 12, pad.lateral, 24);
   k.input.throttle = 1;
   events.length = 0;
@@ -290,7 +291,7 @@ for (const pad of track.boostPads) {
 // ------------------------------------------------------- 7. spin / tumble
 console.log('\n== 7. Spin / tumble / zap / star recovery');
 {
-  const k = makeKart('mochi');
+  const k = makeKart('bananini');
   setAt(k, 10, 0, k.stats.topSpeed);
   k.input.throttle = 1;
   events.length = 0;
@@ -358,26 +359,26 @@ for (const n of [2, 3, 5, 8]) {
 }
 {
   // heavy vs light, side by side bump at equal speeds (closing at 8 m/s)
-  const duke = makeKart('duke'), pip = makeKart('pip');
-  setAt(duke, 20, -1.3, 25); setAt(pip, 20, 1.3, 25);
+  const crocodilo = makeKart('crocodilo'), cappuccina = makeKart('cappuccina');
+  setAt(crocodilo, 20, -1.3, 25); setAt(cappuccina, 20, 1.3, 25);
   const r = track.frameAt(20).right;
-  duke.velocity.x = Math.sin(duke.yaw) * 25 + r.x * 4; duke.velocity.z = Math.cos(duke.yaw) * 25 + r.z * 4;
-  pip.velocity.x = Math.sin(pip.yaw) * 25 - r.x * 4; pip.velocity.z = Math.cos(pip.yaw) * 25 - r.z * 4;
+  crocodilo.velocity.x = Math.sin(crocodilo.yaw) * 25 + r.x * 4; crocodilo.velocity.z = Math.cos(crocodilo.yaw) * 25 + r.z * 4;
+  cappuccina.velocity.x = Math.sin(cappuccina.yaw) * 25 - r.x * 4; cappuccina.velocity.z = Math.cos(cappuccina.yaw) * 25 - r.z * 4;
   events.length = 0;
   const latV = (k) => k.velocity.x * r.x + k.velocity.z * r.z;
   let after = null;
   for (let i = 0; i < 90; i++) {
-    duke.update(DT); pip.update(DT); resolveKartCollisions([duke, pip]);
-    if (!after && events.some((e) => e.type === 'kart:bump')) after = { d: latV(duke), p: latV(pip), ld: duke.proj.lateral, lp: pip.proj.lateral };
+    crocodilo.update(DT); cappuccina.update(DT); resolveKartCollisions([crocodilo, cappuccina]);
+    if (!after && events.some((e) => e.type === 'kart:bump')) after = { d: latV(crocodilo), p: latV(cappuccina), ld: crocodilo.proj.lateral, lp: cappuccina.proj.lateral };
   }
   const bumps = events.filter((e) => e.type === 'kart:bump');
-  const shoveD = after ? duke.proj.lateral - after.ld : 0, shoveP = after ? pip.proj.lateral - after.lp : 0;
-  console.log(`duke vs pip side bump: post-impact lateral vel duke ${f2(after && after.d)}, pip ${f2(after && after.p)} m/s; post-bump lateral travel duke ${f2(shoveD)} m, pip ${f2(shoveP)} m; bump events ${bumps.length} intensity ${bumps[0] ? f2(bumps[0].data.intensity) : '-'}`);
+  const shoveD = after ? crocodilo.proj.lateral - after.ld : 0, shoveP = after ? cappuccina.proj.lateral - after.lp : 0;
+  console.log(`crocodilo vs cappuccina side bump: post-impact lateral vel crocodilo ${f2(after && after.d)}, cappuccina ${f2(after && after.p)} m/s; post-bump lateral travel crocodilo ${f2(shoveD)} m, cappuccina ${f2(shoveP)} m; bump events ${bumps.length} intensity ${bumps[0] ? f2(bumps[0].data.intensity) : '-'}`);
   ok(after && Math.abs(after.p) > Math.abs(after.d) * 1.5, 'heavier kart should push the lighter one more');
   ok(shoveP > 0.6 && shoveP > Math.abs(shoveD) * 2, `lighter kart should get shoved (${f2(shoveP)} m)`);
   ok(bumps.length >= 1, 'bump event emitted');
   // star ram
-  const a = makeKart('gus'), b = makeKart('ziggy');
+  const a = makeKart('patapim'), b = makeKart('assassino');
   setAt(a, 60, 0, 20); setAt(b, 60.8, 0.3, 10);
   a.startStar();
   for (let i = 0; i < 10; i++) { a.update(DT); b.update(DT); resolveKartCollisions([a, b]); }
@@ -390,7 +391,7 @@ console.log('\n== 9. Wall impacts at 30 m/s');
 for (const ang of [90, 45, 20, 8]) {
   for (const side of [1, -1]) {
     // Bay Bridge: the rails sit right at the road edge (no grass strip)
-    const k = makeKart('bolt');
+    const k = makeKart('tralalero');
     const s = 520;
     const f = track.frameAt(s);
     const gap = 2.5;   // distance from the allowed band edge at start

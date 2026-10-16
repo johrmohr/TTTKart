@@ -5,9 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node tools/kart-test.mjs && node tools/race-logic-test.mjs",
+    "test": "node tools/kart-test.mjs && node tools/race-logic-test.mjs && node tools/party-test.mjs",
     "test:net": "node tools/test-net.mjs",
-    "test:integration": "node tools/integration-test.mjs",
+    "test:integration": "node tools/party-browser-test.mjs",
     "test:pad": "node tools/pad-test.mjs",
     "sim": "node tools/sim.mjs",
     "check:track": "node tools/track-check.mjs"

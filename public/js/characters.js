@@ -23,60 +23,14 @@ import { KART } from './config.js';
 // --------------------------------------------------------------- roster data
 
 export const CHARACTERS = [
-  { id: 'blaze', name: 'Blaze', color: 0xff7a1f, accent: 0x2ec4d6, cssColor: '#ff7a1f',
-    ratings: { speed: 3, accel: 3, handling: 4, weight: 3 },
-    tagline: 'Quick-witted fox with a flair for drifting.',
-    signature: { body: 'standard', wheels: 'standard', paint: 'orange', trim: 'teal', rim: 'silver' } },
-  { id: 'bolt', name: 'Bolt', color: 0x2f6bff, accent: 0xd3dbe6, cssColor: '#2f6bff',
-    ratings: { speed: 4, accel: 2, handling: 3, weight: 5 },
-    tagline: 'Heavy-metal robot built like a tank.',
-    signature: { body: 'tank', wheels: 'monster', paint: 'blue', trim: 'silver', rim: 'silver' } },
-  { id: 'pip', name: 'Pip', color: 0xe8344e, accent: 0xffb020, cssColor: '#e8344e',
-    ratings: { speed: 2, accel: 5, handling: 4, weight: 1 },
-    tagline: 'Tiny penguin, huge getaway.',
-    signature: { body: 'buggy', wheels: 'tiny', paint: 'red', trim: 'yellow', rim: 'white' } },
-  { id: 'duke', name: 'Duke', color: 0xffc21f, accent: 0x7a4a24, cssColor: '#ffc21f',
-    ratings: { speed: 5, accel: 1, handling: 2, weight: 5 },
-    tagline: 'Big bear, bigger top speed.',
-    signature: { body: 'tank', wheels: 'offroad', paint: 'yellow', trim: 'brown', rim: 'black' } },
-  { id: 'nova', name: 'Nova', color: 0x8b5cff, accent: 0xf4f4ff, cssColor: '#8b5cff',
-    ratings: { speed: 3, accel: 4, handling: 4, weight: 2 },
-    tagline: 'Space cadet with stellar reflexes.',
-    signature: { body: 'buggy', wheels: 'neon', paint: 'purple', trim: 'white', rim: 'sky' } },
-  { id: 'gus', name: 'Gus', color: 0x35c64a, accent: 0xffd23a, cssColor: '#35c64a',
-    ratings: { speed: 2, accel: 4, handling: 5, weight: 2 },
-    tagline: 'Sticky-footed frog who hugs every corner.',
-    signature: { body: 'feather', wheels: 'standard', paint: 'green', trim: 'yellow', rim: 'yellow' } },
-  { id: 'mochi', name: 'Mochi', color: 0xff7fc0, accent: 0xffffff, cssColor: '#ff7fc0',
-    ratings: { speed: 3, accel: 4, handling: 3, weight: 2 },
-    tagline: 'Purr-fectly balanced street cat.',
-    signature: { body: 'feather', wheels: 'slick', paint: 'pink', trim: 'white', rim: 'white' } },
-  { id: 'ziggy', name: 'Ziggy', color: 0x15c9b0, accent: 0x7a55ff, cssColor: '#15c9b0',
-    ratings: { speed: 4, accel: 3, handling: 2, weight: 3 },
-    tagline: 'Out-of-this-world speed, wobbly steering.',
-    signature: { body: 'rocket', wheels: 'neon', paint: 'teal', trim: 'purple', rim: 'lime' } },
-
-  // Human kid racers (SPEC §13.2). `look` and `signature` feed customize.js.
-  { id: 'krishiv', name: 'Krishiv', human: true, color: 0xe8344e, accent: 0xd9a514, cssColor: '#e8344e',
-    ratings: { speed: 4, accel: 4, handling: 3, weight: 3 },
-    tagline: 'The champ this whole Grand Prix is named after.',
-    look: { skin: 's4', hair: 'spiky', hairColor: 'black', headwear: 'none', eyewear: 'none', outfit: 'red' },
-    signature: { body: 'speedster', wheels: 'slick', paint: 'red', trim: 'gold', rim: 'gold' } },
-  { id: 'striker_max', name: 'Striker Max', human: true, color: 0x2f6bff, accent: 0xffc21f, cssColor: '#2f6bff',
-    ratings: { speed: 5, accel: 2, handling: 3, weight: 4 },
-    tagline: 'Full throttle, zero brakes, all swagger.',
-    look: { skin: 's3', hair: 'mohawk', hairColor: 'blonde', headwear: 'none', eyewear: 'sunglasses', outfit: 'blue' },
-    signature: { body: 'rocket', wheels: 'standard', paint: 'blue', trim: 'yellow', rim: 'silver' } },
-  { id: 'rayyaan', name: 'Rayyaan', human: true, color: 0x35c64a, accent: 0xf4f4f4, cssColor: '#35c64a',
-    ratings: { speed: 3, accel: 4, handling: 5, weight: 2 },
-    tagline: 'Smooth lines and silky drifts.',
-    look: { skin: 's4', hair: 'curly', hairColor: 'black', headwear: 'cap_back', eyewear: 'none', outfit: 'green' },
-    signature: { body: 'feather', wheels: 'neon', paint: 'green', trim: 'white', rim: 'lime' } },
-  { id: 'jordan', name: 'Jordan', human: true, color: 0x38c8ff, accent: 0xff7a1f, cssColor: '#38c8ff',
-    ratings: { speed: 3, accel: 5, handling: 3, weight: 3 },
-    tagline: 'Launches off the line like a rocket.',
-    look: { skin: 's2', hair: 'short', hairColor: 'brown', headwear: 'helmet', eyewear: 'goggles', outfit: 'sky' },
-    signature: { body: 'buggy', wheels: 'tiny', paint: 'sky', trim: 'orange', rim: 'white' } },
+  { id: 'sahur', name: 'Tung Tung Tung Sahur', emoji: '🪵', tagline: 'The wooden legend. One bat. Endless mini-turbos.', color: 12089655, accent: 16762443, cssColor: '#b87937', ratings: { speed: 3, accel: 4, handling: 4, weight: 3 } },
+  { id: 'tralalero', name: 'Tralalero Tralala', emoji: '🦈', tagline: 'Three sneakers. One very fast shark.', color: 3709402, accent: 16777215, cssColor: '#3899da', ratings: { speed: 4, accel: 3, handling: 3, weight: 3 } },
+  { id: 'patapim', name: 'Brr Brr Patapim', emoji: '🌳', tagline: 'A forest giant with roots in every corner.', color: 5544773, accent: 12158539, cssColor: '#549b45', ratings: { speed: 3, accel: 2, handling: 4, weight: 5 } },
+  { id: 'crocodilo', name: 'Bombardiro Crocodilo', emoji: '🐊', tagline: 'Crocodile fuselage. Cleared for takeoff.', color: 6588231, accent: 16764745, cssColor: '#648747', ratings: { speed: 5, accel: 2, handling: 2, weight: 4 } },
+  { id: 'cappuccina', name: 'Ballerina Cappuccina', emoji: '☕', tagline: 'A cappuccino ballerina with a perfect pirouette.', color: 15961018, accent: 16777215, cssColor: '#f38bba', ratings: { speed: 2, accel: 5, handling: 5, weight: 1 } },
+  { id: 'bananini', name: 'Chimpanzini Bananini', emoji: '🍌', tagline: 'Banana peel outside. Monkey business inside.', color: 16045127, accent: 5806657, cssColor: '#f4d447', ratings: { speed: 3, accel: 5, handling: 3, weight: 2 } },
+  { id: 'lirili', name: 'Lirili Larila', emoji: '🌵', tagline: 'Elephant meets cactus. Sandals meet asphalt.', color: 8108651, accent: 13077846, cssColor: '#7bba6b', ratings: { speed: 4, accel: 2, handling: 3, weight: 5 } },
+  { id: 'assassino', name: 'Cappuccino Assassino', emoji: '🥷', tagline: 'Espresso ninja. Quietly stealing first place.', color: 7033725, accent: 15062707, cssColor: '#6b537d', ratings: { speed: 4, accel: 4, handling: 3, weight: 2 } },
 ];
 
 // The player's own creation (SPEC §13.2). Only ever the player; never a CPU.
@@ -90,7 +44,7 @@ export const CUSTOM_CHARACTER = {
 };
 
 // Everything shown on the select screen: the 12-racer roster + the custom slot.
-export const SELECTABLE = [...CHARACTERS, CUSTOM_CHARACTER];
+export const SELECTABLE = [...CHARACTERS];
 
 const BY_ID = new Map(SELECTABLE.map((c) => [c.id, c]));
 
@@ -387,290 +341,88 @@ function torsoBlob(T, color, { belly = null, surf = S.cloth, w = 1, h = 1 } = {}
   if (belly !== null) T.add(sphere(T, 0.2, 14, 10), belly, surf, [0, 0.64, -0.17], [0, 0, 0], [0.95 * w, 0.95 * h, 0.5]);
 }
 
-const DRIVERS = {
-  // --- Blaze: orange fox, pointy ears, white muzzle, bushy tail ------------
-  blaze(T, H, def) {
-    const FUR = 0xff7a1f, WHITE = 0xfff3e2, SUIT = def.accent;
-    torsoBlob(T, SUIT, { belly: 0xffffff });
-    T.add(torus(T, 0.15, 0.05, 6, 14), WHITE, S.fur, [0, 0.86, -0.28], [Math.PI / 2, 0, 0]);
-    arms(T, SUIT, 0xffffff);
-    // bushy tail: J-curl out to the left behind the seat, white tip on top
-    // (presents its side to the chase camera so it reads as a tail)
-    const tail = [
-      [0.1, 0.6, -0.66, 0.1], [0.27, 0.64, -0.72, 0.14], [0.44, 0.73, -0.76, 0.17],
-      [0.56, 0.88, -0.78, 0.17], [0.6, 1.04, -0.78, 0.15], [0.58, 1.17, -0.77, 0.11],
-    ];
-    for (let i = 0; i < tail.length; i++) {
-      const [x, y, z, r] = tail[i];
-      const nb = tail[Math.min(i + 1, tail.length - 1)], pb = tail[Math.max(i - 1, 0)];
-      _dir.set(nb[0] - pb[0], nb[1] - pb[1], nb[2] - pb[2]).normalize();
-      _q.setFromUnitVectors(_up, _dir);
-      _e.setFromQuaternion(_q);
-      T.add(sphere(T, r, 12, 9), i >= tail.length - 2 ? WHITE : FUR, S.fur, [x, y, z], [_e.x, _e.y, _e.z], [1, 1.45, 1]);
+// Original procedural interpretations; no downloaded character assets.
+function brainrotDriver(T,H,def) {
+  const id=def.id, wood=0x9b602f, cream=0xffefd5;
+  torsoBlob(T,def.color,{surf:S.fur}); arms(T,def.color,def.color);
+  if(id==='sahur') {
+    H.add(cyl(H,.25,.25,.82),wood,S.fur,[0,.25,0]);
+    for(let x=-.17;x<=.18;x+=.085) H.add(box(.012,.7,.012),0x663e21,S.fur,[x,.25,.237]);
+    T.limb([.35,.58,-.15],[.55,1.44,-.15],.055,0xc9964b,S.fur);
+    T.add(cyl(T,.09,.065,.48),0xc9964b,S.fur,[.51,1.18,-.15],[0,0,-.2]);
+  } else if(id==='tralalero') {
+    H.add(sphere(H,.32),0x5099bf,S.skin,[0,.2,0],[0,0,0],[1,1,1.5]);
+    H.add(cone(H,.18,.4),0x5099bf,S.skin,[0,.52,-.15]);
+    H.add(box(.35,.05,.15),cream,S.skin,[0,.1,.4]);
+    for(const x of [-.32,0,.32]) T.add(box(.18,.15,.35),0x2866f2,S.paint,[x,.5,.28]);
+  } else if(id==='patapim') {
+    H.add(sphere(H,.3),0xa07c50,S.fur,[0,.2,0]);
+    H.add(sphere(H,.11),0xc1976a,S.skin,[0,.18,.3],[0,0,0],[.8,1.7,1]);
+    for(const x of [-.24,0,.24]) H.add(sphere(H,.2),0x46853c,S.fur,[x,.48,-.1]);
+    T.limb([-.32,.5,-.3],[-.55,1.4,-.5],.04,wood,S.fur);
+    T.limb([.32,.5,-.3],[.55,1.4,-.5],.04,wood,S.fur);
+  } else if(id==='crocodilo') {
+    H.add(box(.5,.27,.68),def.color,S.skin,[0,.16,.18]);
+    H.add(box(.47,.045,.5),cream,S.plastic,[0,.08,.32]);
+    T.add(box(1.6,.06,.28),0x788777,S.metal,[0,.76,-.4]);
+    T.add(cone(T,.19,.5),0x788777,S.metal,[0,.75,-.77],[Math.PI/2,0,0]);
+  } else if(id==='cappuccina'||id==='assassino') {
+    H.add(cyl(H,.3,.22,.48),cream,S.plastic,[0,.22,0]);
+    H.add(cyl(H,.27,.27,.02),0x603b25,S.gloss,[0,.47,0]);
+    H.add(torus(H,.14,.045),cream,S.plastic,[.32,.22,0],[0,Math.PI/2,0]);
+    if(id==='cappuccina') {
+      T.add(cone(T,.46,.2),0xffa8cf,S.cloth,[0,.56,-.3]);
+      H.add(torus(H,.11,.022),cream,S.plastic,[0,.49,0],[Math.PI/2,0,0]);
+    } else {
+      H.add(box(.57,.12,.08),0x232334,S.cloth,[0,.3,.25]);
+      T.limb([-.35,.6,-.5],[.35,1.4,-.5],.025,0xc7d4dd,S.metal);
     }
-    T.add(cone(T, 0.08, 0.15, 9), WHITE, S.fur, [0.555, 1.27, -0.77], [0, 0, 0.18]);
-
-    const hc = 0.27;
-    H.add(sphere(H, 0.28, 18, 14), FUR, S.fur, [0, hc, 0], [0, 0, 0], [1.06, 0.96, 1]);
-    // cheek tufts
-    H.sym(() => cone(H, 0.09, 0.2, 6), WHITE, S.fur, [0.25, hc - 0.09, 0.04], [0, 0, 1.9]);
-    // muzzle + nose
-    H.add(sphere(H, 0.16, 14, 10), WHITE, S.fur, [0, hc - 0.08, 0.19], [0, 0, 0], [1.05, 0.72, 1.2]);
-    H.add(sphere(H, 0.048, 10, 8), 0x1b1b20, S.gloss, [0, hc - 0.03, 0.375], [0, 0, 0], [1.3, 0.9, 1]);
-    H.add(torus(H, 0.05, 0.012, 4, 10, Math.PI), 0x3a2016, S.plastic, [0, hc - 0.115, 0.33], [0, 0, Math.PI], [1, 0.7, 1]);
-    // pointy ears with dark tips + inner
-    for (const sx of [1, -1]) {
-      H.push([0.15 * sx, hc + 0.26, -0.02], [0, 0, -0.32 * sx]);
-      H.add(cone(H, 0.11, 0.26, 4), FUR, S.fur, [0, 0, 0], [0, Math.PI / 4, 0], [1, 1, 0.55]);
-      H.add(cone(H, 0.07, 0.16, 4), 0x3a2016, S.fur, [0, -0.03, 0.035], [0, Math.PI / 4, 0], [1, 1, 0.4]);
-      H.add(cone(H, 0.045, 0.08, 4), 0x2b1a14, S.fur, [0, 0.1, 0], [0, Math.PI / 4, 0], [1, 1, 0.6]);
-      H.pop();
-    }
-    // forehead tuft
-    H.add(cone(H, 0.06, 0.14, 6), FUR, S.fur, [0, hc + 0.26, 0.12], [0.9, 0, 0]);
-    eye(H, 0.105, hc + 0.05, 0.23, 0.075, { iris: 0x2fae5b, yaw: 0.28 });
-    eye(H, -0.105, hc + 0.05, 0.23, 0.075, { iris: 0x2fae5b, yaw: -0.28 });
-    // brows
-    H.sym(() => rbox(H, 0.09, 0.022, 0.03, 0.01), 0x6a2a0c, S.fur, [0.11, hc + 0.15, 0.25], [0, 0.3, -0.18]);
-  },
-
-  // --- Bolt: chunky silver/blue robot, antenna, glowing visor --------------
-  bolt(T, H, def) {
-    const SILVER = 0xd3dbe6, BLUE = def.color, VISOR = 0x3ff3ff;
-    T.add(rbox(T, 0.52, 0.42, 0.34, 0.08), BLUE, S.paint, [0, 0.66, -0.3]);
-    T.add(rbox(T, 0.36, 0.2, 0.06, 0.04), SILVER, S.metal, [0, 0.7, -0.12]);
-    T.add(cyl(T, 0.05, 0.05, 0.03, 12), 0xffd23a, S.glow, [0, 0.7, -0.09], [Math.PI / 2, 0, 0]);
-    T.sym(() => sphere(T, 0.1, 10, 8), SILVER, S.metal, [0.27, 0.8, -0.28]);
-    // segmented metal arms, blue mitts
-    for (const sx of [1, -1]) {
-      T.limb([0.27 * sx, 0.79, -0.27], [0.29 * sx, 0.66, -0.06], 0.05, SILVER, S.metal);
-      T.add(sphere(T, 0.065, 10, 8), 0x55606c, S.metal, [0.29 * sx, 0.66, -0.06]);
-      T.limb([0.29 * sx, 0.66, -0.06], [0.14 * sx, 0.76, 0.15], 0.05, SILVER, S.metal);
-      T.add(rbox(T, 0.12, 0.12, 0.12, 0.04), BLUE, S.paint, [0.14 * sx, 0.76, 0.15]);
-    }
-    // neck
-    T.add(cyl(T, 0.07, 0.09, 0.12, 10), 0x55606c, S.metal, [0, 0.88, -0.28]);
-
-    const hc = 0.25;
-    H.add(rbox(H, 0.52, 0.42, 0.44, 0.1), SILVER, S.metal, [0, hc, 0]);
-    H.add(rbox(H, 0.54, 0.08, 0.46, 0.03), BLUE, S.paint, [0, hc + 0.19, 0]);
-    // visor band with two bright eye slits
-    H.add(rbox(H, 0.44, 0.15, 0.06, 0.03), 0x0b1a2a, S.gloss, [0, hc + 0.03, 0.215]);
-    H.add(rbox(H, 0.4, 0.11, 0.02, 0.02), VISOR, S.softGlow, [0, hc + 0.03, 0.245]);
-    H.sym(() => sphere(H, 0.045, 10, 8), 0xeaffff, S.glow, [0.1, hc + 0.035, 0.255], [0, 0, 0], [1.25, 0.9, 0.4]);
-    // mouth grille
-    for (let k = -1; k <= 1; k++) H.add(box(0.035, 0.07, 0.02), 0x2a313a, S.plastic, [k * 0.07, hc - 0.12, 0.222]);
-    // ear bolts
-    H.sym(() => cyl(H, 0.075, 0.075, 0.08, 12), BLUE, S.paint, [0.27, hc, 0], [0, 0, Math.PI / 2]);
-    H.sym(() => cyl(H, 0.035, 0.035, 0.1, 8), CHROME, S.metal, [0.3, hc, 0], [0, 0, Math.PI / 2]);
-    // antenna
-    H.add(cyl(H, 0.014, 0.014, 0.24, 6), CHROME, S.metal, [0.1, hc + 0.33, -0.03], [0, 0, -0.15]);
-    H.add(sphere(H, 0.055, 10, 8), 0xff3b3b, S.glow, [0.12, hc + 0.46, -0.03]);
-  },
-
-  // --- Pip: small penguin, black/white, orange beak, scarf ------------------
-  pip(T, H, def) {
-    const BLACK = 0x23262f, WHITE = 0xf8f8fb, BEAK = 0xffa21f, SCARF = def.color;
-    torsoBlob(T, BLACK, { belly: WHITE, surf: S.fur });
-    // flipper arms
-    for (const sx of [1, -1]) {
-      T.limb([0.21 * sx, 0.78, -0.28], [0.26 * sx, 0.66, -0.05], 0.06, BLACK, S.fur);
-      T.limb([0.26 * sx, 0.66, -0.05], [0.14 * sx, 0.76, 0.14], 0.055, BLACK, S.fur);
-      T.add(sphere(T, 0.07, 10, 8), BLACK, S.fur, [0.14 * sx, 0.76, 0.15], [0, 0, 0], [1, 0.8, 1.2]);
-    }
-    // scarf: ring + two striped tails flapping behind
-    T.add(torus(T, 0.15, 0.06, 6, 16), SCARF, S.cloth, [0, 0.85, -0.28], [Math.PI / 2, 0, 0]);
-    T.add(rbox(T, 0.12, 0.05, 0.36, 0.02), SCARF, S.cloth, [0.1, 0.84, -0.55], [0.35, 0.25, 0.1]);
-    T.add(rbox(T, 0.125, 0.055, 0.06, 0.02), 0xffffff, S.cloth, [0.13, 0.78, -0.66], [0.35, 0.25, 0.1]);
-    T.add(rbox(T, 0.1, 0.045, 0.28, 0.02), SCARF, S.cloth, [-0.04, 0.8, -0.52], [0.6, -0.15, -0.1]);
-
-    const hc = 0.25;
-    H.add(sphere(H, 0.27, 18, 14), BLACK, S.fur, [0, hc, 0], [0, 0, 0], [1.02, 0.97, 0.98]);
-    // white face mask (two lobes)
-    H.sym(() => sphere(H, 0.13, 12, 10), WHITE, S.fur, [0.08, hc - 0.01, 0.17], [0, 0, 0], [1, 1.15, 0.7]);
-    H.add(sphere(H, 0.15, 12, 10), WHITE, S.fur, [0, hc - 0.08, 0.15], [0, 0, 0], [1.2, 0.8, 0.75]);
-    // beak
-    H.add(cone(H, 0.07, 0.17, 10), BEAK, S.gloss, [0, hc - 0.05, 0.33], [Math.PI / 2, 0, 0], [1.2, 1, 0.75]);
-    // blush
-    H.sym(() => sphere(H, 0.035, 8, 6), 0xff8fb0, S.skin, [0.16, hc - 0.07, 0.2], [0, 0, 0], [1, 0.7, 0.4]);
-    eye(H, 0.085, hc + 0.05, 0.235, 0.062, { iris: 0x1e2433, yaw: 0.25, irisScale: 0.7 });
-    eye(H, -0.085, hc + 0.05, 0.235, 0.062, { iris: 0x1e2433, yaw: -0.25, irisScale: 0.7 });
-    // head tuft
-    for (let k = -1; k <= 1; k++) H.add(cone(H, 0.035, 0.13, 5), BLACK, S.fur, [k * 0.04, hc + 0.29, 0.02], [0.2, 0, -k * 0.45]);
-  },
-
-  // --- Duke: big brown bear, round ears, aviator goggles --------------------
-  duke(T, H, def) {
-    const FUR = 0x8b5a2b, TAN = 0xdcb88e, JACKET = 0x6b3d1e, BRASS = 0xd6a94a;
-    torsoBlob(T, JACKET, { belly: TAN, w: 1.08 });
-    T.add(torus(T, 0.16, 0.065, 6, 16), 0xf3e6cf, S.fur, [0, 0.85, -0.28], [Math.PI / 2, 0, 0]);
-    // aviator scarf tail
-    T.add(rbox(T, 0.11, 0.04, 0.4, 0.02), 0xffffff, S.cloth, [-0.12, 0.86, -0.56], [0.25, -0.35, -0.15]);
-    arms(T, JACKET, FUR, 0.078, 0.09);
-
-    const hc = 0.27;
-    H.add(sphere(H, 0.3, 18, 14), FUR, S.fur, [0, hc, 0], [0, 0, 0], [1.08, 0.98, 1]);
-    // round ears
-    H.sym(() => sphere(H, 0.1, 12, 10), FUR, S.fur, [0.21, hc + 0.22, -0.04], [0, 0, 0], [1, 1, 0.6]);
-    H.sym(() => sphere(H, 0.06, 10, 8), TAN, S.fur, [0.21, hc + 0.215, 0.0], [0, 0, 0], [1, 1, 0.35]);
-    // muzzle + nose + mouth
-    H.add(sphere(H, 0.15, 14, 10), TAN, S.fur, [0, hc - 0.09, 0.21], [0, 0, 0], [1.15, 0.8, 0.95]);
-    H.add(sphere(H, 0.06, 10, 8), 0x1b1412, S.gloss, [0, hc - 0.04, 0.345], [0, 0, 0], [1.35, 0.9, 0.9]);
-    H.add(torus(H, 0.045, 0.012, 4, 10, Math.PI), 0x2e1d12, S.plastic, [0, hc - 0.135, 0.33], [0, 0, Math.PI], [1.2, 0.7, 1]);
-    eye(H, 0.11, hc + 0.05, 0.25, 0.055, { iris: 0x2a1a10, yaw: 0.3, irisScale: 0.75 });
-    eye(H, -0.11, hc + 0.05, 0.25, 0.055, { iris: 0x2a1a10, yaw: -0.3, irisScale: 0.75 });
-    H.sym(() => rbox(H, 0.11, 0.03, 0.03, 0.012), 0x4a2c14, S.fur, [0.11, hc + 0.12, 0.27], [0, 0.3, 0.12]);
-    // aviator goggles pushed up on the forehead + strap
-    H.add(torus(H, 0.3, 0.03, 4, 24), 0x3b2a1c, S.cloth, [0, hc + 0.13, -0.01], [Math.PI / 2 - 0.25, 0, 0], [1.08, 1, 1]);
-    for (const sx of [1, -1]) {
-      H.push([0.1 * sx, hc + 0.18, 0.25], [-0.6, 0.25 * sx, 0]);
-      H.add(torus(H, 0.07, 0.025, 6, 14), BRASS, S.metal);
-      H.add(cyl(H, 0.065, 0.065, 0.02, 14), 0x8fe3ff, S.softGlow, [0, 0, 0], [Math.PI / 2, 0, 0]);
-      H.pop();
-    }
-  },
-
-  // --- Nova: astronaut kid, purple suit, bubble helmet ----------------------
-  nova(T, H, def, G) {
-    const SUIT = def.color, WHITE = 0xf4f4ff, SKIN = 0xffd1ae, HAIR = 0x4a2c1d;
-    torsoBlob(T, SUIT);
-    T.add(rbox(T, 0.26, 0.2, 0.06, 0.03), WHITE, S.plastic, [0, 0.68, -0.12]);
-    T.sym(() => sphere(T, 0.025, 8, 6), 0x3ff3ff, S.glow, [0.06, 0.7, -0.085]);
-    T.add(sphere(T, 0.025, 8, 6), 0xff5fd2, S.glow, [0, 0.64, -0.085]);
-    // helmet collar ring
-    T.add(torus(T, 0.17, 0.05, 6, 18), WHITE, S.plastic, [0, 0.86, -0.28], [Math.PI / 2, 0, 0]);
-    // backpack + thrusters
-    T.add(rbox(T, 0.38, 0.4, 0.16, 0.05), WHITE, S.plastic, [0, 0.72, -0.52]);
-    T.sym(() => cyl(T, 0.05, 0.06, 0.14, 10), 0x9aa3b0, S.metal, [0.11, 0.5, -0.53]);
-    T.add(rbox(T, 0.2, 0.04, 0.02, 0.01), SUIT, S.paint, [0, 0.82, -0.605]);
-    arms(T, SUIT, WHITE, 0.07, 0.085);
-
-    const hc = 0.28;
-    H.add(sphere(H, 0.2, 16, 12), SKIN, S.skin, [0, hc - 0.01, 0.01]);
-    // hair cap (partial sphere tilted back) + little bun
-    H.add(new THREE.SphereGeometry(0.212, H.n(16, 6), H.n(8, 3), 0, Math.PI * 2, 0, Math.PI * 0.42), HAIR, S.fur, [0, hc - 0.005, -0.005], [-0.35, 0, 0]);
-    H.add(sphere(H, 0.07, 10, 8), HAIR, S.fur, [0, hc + 0.18, -0.1]);
-    eye(H, 0.075, hc + 0.0, 0.17, 0.052, { iris: 0x5a3d2a, yaw: 0.3, irisScale: 0.72 });
-    eye(H, -0.075, hc + 0.0, 0.17, 0.052, { iris: 0x5a3d2a, yaw: -0.3, irisScale: 0.72 });
-    H.sym(() => sphere(H, 0.03, 8, 6), 0xff9db5, S.skin, [0.12, hc - 0.07, 0.15], [0, 0, 0], [1, 0.7, 0.4]);
-    H.add(torus(H, 0.04, 0.011, 4, 10, Math.PI), 0x6b2b2b, S.plastic, [0, hc - 0.085, 0.185], [0, 0, Math.PI]);
-    // helmet glint + antenna
-    H.add(sphere(H, 0.05, 8, 6), 0xffffff, S.softGlow, [0.15, hc + 0.18, 0.22], [0, 0, 0.6], [1.6, 0.5, 0.3]);
-    H.add(cyl(H, 0.014, 0.014, 0.16, 6), 0xb8c2cf, S.metal, [-0.12, hc + 0.36, -0.05], [0, 0, 0.3]);
-    H.add(sphere(H, 0.045, 10, 8), 0xffe14d, S.glow, [-0.145, hc + 0.44, -0.05]);
-    // transparent bubble (separate glass mesh)
-    G.add(new THREE.SphereGeometry(0.335, G.n(22, 10), G.n(16, 8)), 0xd9ecff, S.gloss, [0, hc + 0.02, 0.01]);
-  },
-
-  // --- Gus: green frog, big eyes on top, wide mouth -------------------------
-  gus(T, H, def) {
-    const GREEN = 0x3fc84a, BELLY = 0xdaf5a2, VEST = def.accent;
-    torsoBlob(T, GREEN, { belly: BELLY, surf: S.skin });
-    // little racing vest straps
-    T.sym(() => rbox(T, 0.06, 0.38, 0.05, 0.02), VEST, S.cloth, [0.12, 0.67, -0.15], [0.15, 0, -0.08]);
-    T.add(torus(T, 0.14, 0.035, 5, 14), VEST, S.cloth, [0, 0.83, -0.28], [Math.PI / 2, 0, 0]);
-    arms(T, GREEN, 0xff8fa8, 0.06, 0.075);
-
-    const hc = 0.2;
-    H.add(sphere(H, 0.28, 18, 14), GREEN, S.skin, [0, hc, 0.02], [0, 0, 0], [1.28, 0.78, 1.02]);
-    H.add(sphere(H, 0.24, 16, 10), BELLY, S.skin, [0, hc - 0.07, 0.07], [0, 0, 0], [1.2, 0.55, 1.0]);
-    // eyes on top: green lids + big bulging eyes
-    for (const sx of [1, -1]) {
-      H.add(sphere(H, 0.12, 14, 10), GREEN, S.skin, [0.15 * sx, hc + 0.17, 0.06]);
-      eye(H, 0.15 * sx, hc + 0.19, 0.13, 0.1, { iris: 0x1a1a1a, yaw: 0.22 * sx, pitch: -0.1, squash: 1.0, irisScale: 0.6 });
-    }
-    // wide smile + nostrils + cheeks
-    H.add(torus(H, 0.22, 0.017, 4, 22, Math.PI * 0.85), 0x2b1a1a, S.plastic, [0, hc - 0.02, 0.2], [Math.PI / 2 + 0.35, 0, Math.PI * 1.075 + Math.PI], [1, 0.62, 1]);
-    H.sym(() => sphere(H, 0.014, 6, 4), 0x1c3a1c, S.plastic, [0.04, hc + 0.05, 0.3]);
-    H.sym(() => sphere(H, 0.05, 10, 8), 0xff8fa8, S.skin, [0.25, hc - 0.03, 0.18], [0, 0, 0], [1, 0.7, 0.4]);
-  },
-
-  // --- Mochi: white cat, pink ears, bell collar -----------------------------
-  mochi(T, H, def) {
-    const WHITE = 0xfbf8f3, PINK = 0xff9ec7, HOODIE = def.color;
-    torsoBlob(T, HOODIE, { belly: 0xffffff });
-    arms(T, HOODIE, WHITE, 0.066, 0.08);
-    // collar + golden bell
-    T.add(torus(T, 0.15, 0.035, 6, 16), 0xe8344e, S.cloth, [0, 0.86, -0.28], [Math.PI / 2, 0, 0]);
-    T.add(sphere(T, 0.055, 12, 10), 0xffcf3a, S.metal, [0, 0.8, -0.12]);
-    T.add(torus(T, 0.054, 0.008, 4, 12), 0xb88a1a, S.metal, [0, 0.8, -0.12], [Math.PI / 2, 0, 0]);
-    // curly tail
-    const tail = [[0.0, 0.5, -0.62], [0.12, 0.62, -0.76], [0.2, 0.84, -0.84], [0.17, 1.04, -0.84], [0.06, 1.12, -0.8]];
-    for (let k = 0; k < tail.length - 1; k++) T.limb(tail[k], tail[k + 1], 0.045, k === tail.length - 2 ? PINK : WHITE, S.fur);
-
-    const hc = 0.27;
-    H.add(sphere(H, 0.28, 18, 14), WHITE, S.fur, [0, hc, 0], [0, 0, 0], [1.1, 0.95, 1]);
-    H.sym(() => sphere(H, 0.1, 10, 8), WHITE, S.fur, [0.17, hc - 0.07, 0.13], [0, 0, 0], [1.3, 1, 1]);
-    // pink triangle ears
-    for (const sx of [1, -1]) {
-      H.push([0.16 * sx, hc + 0.22, -0.01], [0, 0, -0.38 * sx]);
-      H.add(cone(H, 0.12, 0.22, 4), WHITE, S.fur, [0, 0, 0], [0, Math.PI / 4, 0], [1, 1, 0.6]);
-      H.add(cone(H, 0.08, 0.15, 4), PINK, S.fur, [0, -0.02, 0.035], [0, Math.PI / 4, 0], [1, 1, 0.4]);
-      H.pop();
-    }
-    eye(H, 0.11, hc + 0.04, 0.235, 0.078, { iris: 0x2bb5a0, yaw: 0.3, irisScale: 0.7 });
-    eye(H, -0.11, hc + 0.04, 0.235, 0.078, { iris: 0x2bb5a0, yaw: -0.3, irisScale: 0.7 });
-    // pink nose + "w" mouth + whiskers + blush
-    H.add(sphere(H, 0.03, 8, 6), 0xff6fa5, S.gloss, [0, hc - 0.05, 0.3], [0, 0, 0], [1.3, 0.8, 0.8]);
-    H.sym(() => torus(H, 0.03, 0.009, 4, 8, Math.PI), 0x4a3a40, S.plastic, [0.028, hc - 0.09, 0.28], [0, 0, Math.PI]);
-    for (const sx of [1, -1]) {
-      for (let k = -1; k <= 1; k++) {
-        H.add(box(0.2, 0.008, 0.008), 0x6a5d63, S.plastic, [0.27 * sx, hc - 0.06 + k * 0.03, 0.17], [0, -0.35 * sx, -k * 0.18 * sx]);
-      }
-    }
-    H.sym(() => sphere(H, 0.04, 8, 6), 0xffb3cf, S.skin, [0.17, hc - 0.08, 0.2], [0, 0, 0], [1, 0.6, 0.4]);
-  },
-
-  // --- Ziggy: teal alien, three eyes, antenna bobbles -----------------------
-  ziggy(T, H, def) {
-    const SKIN = 0x22d3b6, SUIT = 0x4b3a8f, GLOW = 0xff5fd2;
-    torsoBlob(T, SUIT);
-    T.add(torus(T, 0.2, 0.025, 5, 18), 0x3ff3ff, S.glow, [0, 0.6, -0.3], [Math.PI / 2, 0, 0], [1.15, 0.95, 1]);
-    T.add(cyl(T, 0.07, 0.08, 0.12, 10), SKIN, S.skin, [0, 0.86, -0.28]);
-    T.sym(() => cone(T, 0.09, 0.12, 6), def.accent, S.paint, [0.26, 0.82, -0.3], [0, 0, -1.2]);
-    arms(T, SUIT, SKIN, 0.062, 0.076);
-
-    const hc = 0.3;
-    H.add(sphere(H, 0.27, 18, 14), SKIN, S.skin, [0, hc, 0], [0, 0, 0], [1.02, 1.18, 0.96]);
-    H.add(sphere(H, 0.14, 12, 10), SKIN, S.skin, [0, hc - 0.18, 0.06], [0, 0, 0], [1, 0.8, 0.9]);
-    // three eyes (big center one)
-    eye(H, 0, hc + 0.08, 0.235, 0.085, { iris: 0x7a3cff, irisScale: 0.66 });
-    eye(H, 0.135, hc + 0.0, 0.205, 0.06, { iris: 0x7a3cff, yaw: 0.45, irisScale: 0.66 });
-    eye(H, -0.135, hc + 0.0, 0.205, 0.06, { iris: 0x7a3cff, yaw: -0.45, irisScale: 0.66 });
-    H.add(torus(H, 0.05, 0.012, 4, 10, Math.PI), 0x0f4a40, S.plastic, [0, hc - 0.14, 0.235], [0, 0, Math.PI], [1.2, 0.8, 1]);
-    // antennae with glowing bobbles
-    for (const sx of [1, -1]) {
-      H.limb([0.07 * sx, hc + 0.28, -0.02], [0.17 * sx, hc + 0.5, -0.05], 0.016, SKIN, S.skin);
-      H.add(sphere(H, 0.06, 12, 10), GLOW, S.glow, [0.18 * sx, hc + 0.53, -0.05]);
-    }
-    // tiny pointy ears
-    H.sym(() => cone(H, 0.05, 0.14, 6), SKIN, S.skin, [0.28, hc + 0.02, -0.02], [0, 0, -1.3]);
-  },
-};
+  } else if(id==='bananini') {
+    H.add(sphere(H,.28),0x709344,S.fur,[0,.2,0]);
+    H.add(sphere(H,.22),0xd6b57f,S.skin,[0,.17,.16],[0,0,0],[1,1,.6]);
+    H.sym(()=>sphere(H,.13),0x709344,S.fur,[.28,.24,0]);
+    for(const x of [-.3,.3]) T.add(cone(T,.15,.7),0xffdf42,S.plastic,[x,.85,-.3],[0,0,x]);
+  } else {
+    H.add(sphere(H,.3),0x89a98a,S.skin,[0,.2,0]);
+    H.sym(()=>sphere(H,.2),0x9dbb9c,S.skin,[.29,.23,0],[0,0,0],[.6,1,1]);
+    H.limb([0,.18,.25],[0,-.12,.47],.075,0x89a98a,S.skin);
+    T.add(cyl(T,.23,.23,.53),0x4c9348,S.skin,[0,.71,-.3]);
+    for(const x of [-.34,.34]) T.add(box(.23,.08,.36),0x8c5738,S.fur,[x,.42,.1]);
+  }
+  const z=id==='crocodilo'?.36:id==='tralalero'?.37:.24;
+  eye(H,-.11,.32,z,.075); eye(H,.11,.32,z,.075);
+}
 
 // --------------------------------------------------------------- the model
 
 // Per-character visual scale tweaks.
-const DRIVER_SCALE = { pip: 0.86, duke: 1.12, bolt: 1.06, nova: 0.96, gus: 0.98 };
+const DRIVER_SCALE = {};
 
 const _geoCache = new Map();
 
 function buildGeometries(def, lod) {
-  const key = `${def.id}|${lod}`;
+  const key = `${def.id}|${def.body || "standard"}|${def.wheelType || "standard"}|${lod}`;
   const hit = _geoCache.get(key);
   if (hit) return hit;
   const seg = lod === 'low' ? 0.55 : 1;
   const chassis = new Parts(seg);
   buildChassis(chassis, def);
+  if (def.body === "speedster") {
+    chassis.add(box(1.65, .09, .34), def.accent, S.paint, [0,.9,-.92]);
+    chassis.add(box(.9,.14,.9),def.color,S.paint,[0,.34,.62]);
+  }
+  if (def.body === "buggy") chassis.add(torus(chassis,.58,.045),def.accent,S.metal,[0,.79,-.45]);
   const wheel = new Parts(seg);
   buildWheel(wheel, def);
 
   const T = new Parts(seg);
   const H = new Parts(seg);
   const G = new Parts(seg);
-  const fn = DRIVERS[def.id] || DRIVERS.blaze;
+  const fn = brainrotDriver;
   // Head parts are authored relative to the neck pivot; torso in kart space.
   fn(T, H, def, G);
+  if (def.wheelType === "offroad") { for(let i=0;i<12;i++) { const a=i*Math.PI/6; wheel.add(box(.36,.09,.13),0x27252a,S.rubber,[0,Math.cos(a)*.34,Math.sin(a)*.34],[a,0,0]); } }
+  if (def.wheelType === "roller") { for (const g of wheel.geos) g.scale(.62,1,1); }
   const torso = T.merge();
   torso.translate(-SEAT[0], -SEAT[1], -SEAT[2]);
   const out = {

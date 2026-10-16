@@ -15,8 +15,8 @@ import { fileURLToPath } from 'node:url';
 import { io as ioClient } from 'socket.io-client';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const PORT = 3100;
-const HTTPS_PORT = 3543;
+const PORT = Number(process.env.TEST_PORT || 3102);
+const HTTPS_PORT = Number(process.env.TEST_HTTPS_PORT || 3542);
 const GRACE_MS = 1500;
 const HTTP_URL = `http://localhost:${PORT}`;
 const HTTPS_URL = `https://localhost:${HTTPS_PORT}`;
@@ -169,7 +169,7 @@ await test('GET /api/info over http and https', async () => {
   assertEq(a.httpPort, PORT, 'httpPort');
   assertEq(a.httpsPort, HTTPS_PORT, 'httpsPort');
   assert(Array.isArray(a.lanIps), 'lanIps array');
-  assert(/^https:\/\/[^/]+:3543\/pad$/.test(a.padBaseUrl), `padBaseUrl ${a.padBaseUrl}`);
+  assert(a.padBaseUrl.startsWith('https://') && new URL(a.padBaseUrl).port === String(HTTPS_PORT) && new URL(a.padBaseUrl).pathname === '/pad', `padBaseUrl ${a.padBaseUrl}`);
   assertEq(info.padBaseUrl, a.padBaseUrl, 'same info on https');
 });
 

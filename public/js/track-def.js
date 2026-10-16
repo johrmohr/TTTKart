@@ -98,3 +98,19 @@ export const TRACK_DEF = {
     { u0: 11.0, u1: 14.0, type: 'cliff' },
   ],
 };
+
+// A closed stadium course designed for long, adjustable drift arcs.
+export const SPEEDWAY_DEF = {
+  ...TRACK_DEF, name: 'Sahur Speedway',
+  segments: [
+    {type:'straight',length:155,name:'Sahur Straight'},
+    {type:'arc',dir:'right',angle:180,radius:58,name:'Moon Bend'},
+    {type:'straight',length:155,name:'Boost Alley'},
+    {type:'arc',dir:'right',angle:180,radius:58,name:'Forest Bend'},
+  ],
+  elevation:[[0,0],[4,0]], halfWidth:[[0,13],[4,13]],
+  offroadLeft:[[0,8],[4,8]],offroadRight:[[0,8],[4,8]],
+  itemRows:[{u:.65,count:5},{u:2.6,count:5}],
+  boostPads:[{u:.3,lateral:-5,length:6,width:4},{u:2.3,lateral:5,length:6,width:4}],
+  ramps:[], zones:[],
+};

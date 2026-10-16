@@ -30,12 +30,12 @@ import { ROOM_ALPHABET, ROOM_CODE_LENGTH, normalizeRoomCode } from './net.js';
 
 const DEG = Math.PI / 180;
 const RAD2DEG = 180 / Math.PI;
-const DEAD_ZONE_DEG = 2;
+const DEAD_ZONE_DEG = 3.5;
 const LOCK_MIN_DEG = 18;
-const LOCK_MAX_DEG = 50;
-const LOCK_DEFAULT_DEG = 32;
-const EXPO = 0.35;                 // 0 = linear … 1 = cubic response
-const STEER_LPF_RATE = 22;         // 1/s low-pass (~45 ms time constant)
+const LOCK_MAX_DEG = 65;
+const LOCK_DEFAULT_DEG = 45;
+const EXPO = 0.52;                 // 0 = linear … 1 = cubic response
+const STEER_LPF_RATE = 14;         // 1/s low-pass (~45 ms time constant)
 const TOUCH_LPF_RATE = 32;
 const SENSOR_TIMEOUT_MS = 1500;    // after the gate: no events → next fallback
 const SENSOR_STALE_MS = 600;       // tilt source silent this long → steer returns to 0
@@ -61,7 +61,7 @@ const SETTINGS_KEY = 'tootkart.pad.settings.v1';
 const ID_KEY = 'tootkart.pad.id';
 const HOST_SCREENS = new Set(['title', 'select', 'race', 'results', 'paused', 'loading']);
 // Character art on the pad is just a color swatch + a generic emoji.
-const CHAR_EMOJI = { blaze: '🦊', bolt: '🤖', pip: '🐧', duke: '🐻', nova: '🧑‍🚀', gus: '🐸', mochi: '🐱', ziggy: '👽' };
+const CHAR_EMOJI = { sahur: '🪵',tralalero: '🦈',patapim: '🌳',crocodilo: '🐊',cappuccina: '☕',bananini: '🍌',lirili: '🌵',assassino: '🥷', blaze: '🦊', bolt: '🤖', pip: '🐧', duke: '🐻', nova: '🧑‍🚀', gus: '🐸', mochi: '🐱', ziggy: '👽' };
 
 // ---------------------------------------------------------------- storage
 
@@ -1110,6 +1110,12 @@ function buildCharacterCards(chars) {
 
 function renderSelect() {
   const s = state.host;
+  const title = document.querySelector('#scr-select .screen-title');
+  if(title) title.textContent = s.setupTitle || 'Choose your racer';
+  const go = document.querySelector('#btn-go');
+  if(go) go.textContent = s.setupReady ? 'Ready ✓' : 'Confirm →';
+  el.diffSeg.hidden = !!s.setupTitle;
+  document.getElementById('btn-customize').hidden = true;
   const chars = Array.isArray(s.characters) ? s.characters : [];
   const key = JSON.stringify(chars);
   if (key !== selectKey) { selectKey = key; buildCharacterCards(chars); }
@@ -1146,6 +1152,11 @@ function stopRoll() {
 
 function renderRace() {
   const r = state.host.race || {};
+  let beerStatus=document.getElementById('beer-status');
+  if(!beerStatus){beerStatus=document.createElement('div');beerStatus.id='beer-status';beerStatus.className='beer-status';document.getElementById('scr-race').append(beerStatus);}
+  beerStatus.hidden=!(r.drunkSeconds>0);
+  beerStatus.textContent=`🍺 Wobbly steering · ${Math.ceil(r.drunkSeconds||0)}s`;
+
   const place = Number(r.place) || 0;
   const racers = Number(r.racers) || 0;
   if (place > 0) {

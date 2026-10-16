@@ -23,13 +23,13 @@ import { statsFromRatings } from './characters.js';
 export const KART_TUNE = {
   // steering
   turnRefSpeed: 8,          // m/s at which steering reaches full authority
-  highSpeedTurnLoss: 0.2,   // fraction of turn rate lost near top speed
-  yawResponse: 13,          // 1/s: how fast the yaw rate follows the stick
+  highSpeedTurnLoss: 0.30,   // fraction of turn rate lost near top speed
+  yawResponse: 9,          // 1/s: how fast the yaw rate follows the stick
   airSteer: 0.45,           // turn authority while airborne (jumps)
   hopSteer: 1.0,            // turn authority during a drift hop
   // drift (yaw-rate multipliers of turnRate: counter-steer .. into the drift)
-  driftWide: 0.3,
-  driftTight: 1.28,
+  driftWide: 0.12,
+  driftTight: 0.92,
   driftSpeedMult: 0.985,    // drifting is a hair slower than driving straight
   driftChargeInto: 1.3,
   driftCancelSpeed: 6,
@@ -37,7 +37,7 @@ export const KART_TUNE = {
   landDriftGrace: 0.22,     // s after landing in which steering can still start a drift
   // grip (1/s decay of lateral velocity) + fraction of lateral energy kept
   grip: 10,
-  driftGrip: 3.5,
+  driftGrip: 4.4,
   offroadGrip: 7,
   airGrip: 0.8,
   spinGrip: 3,
@@ -119,7 +119,7 @@ export class Kart {
     this.frozen = false;
     this.speedMult = 1;
     this.surface = 'road';
-    this.steerVisual = 0;
+    this.steerVisual = 0; this.drunkTimer = 0; this._driveClock = 0;
     this.yawRate = 0;
     this.wallContact = 0;                   // > 0 for a moment after touching a wall
 
@@ -159,7 +159,7 @@ export class Kart {
     let m = this.stats.topSpeed * this.speedMult;
     const star = this.starTimer > 0, boost = this.boostTimer > 0;
     if (!star && !boost) {
-      if (this.surface === 'offroad') m *= KART.offroadSpeedMult;
+      if (this.surface === 'offroad') m *= KART.offroadSpeedMult + (this.character?.wheelType === 'offroad' ? .12 : 0);
       else if (this.surface === 'curb') m *= KART.curbSpeedMult;
     }
     if (boost) m *= KART.boostSpeedMult;
@@ -195,7 +195,7 @@ export class Kart {
     d.active = false; d.dir = 0; d.charge = 0; d.tier = 0; d.hopping = false;
     this.boostTimer = 0; this.starTimer = 0; this.spinTimer = 0; this.tumbleTimer = 0;
     this.slowTimer = 0; this.invulnTimer = 0; this.stallTimer = 0;
-    this.steerVisual = 0;
+    this.steerVisual = 0; this.drunkTimer = 0; this._driveClock = 0;
     this.wallContact = 0;
     this._driftAir = 0; this._landGrace = 0; this._padCooldown = 0;
     this._wallCooldown = 0; this._bumpCooldown = 0; this._bumpSlide = 0; this._prevSlope = 0;
@@ -246,6 +246,7 @@ export class Kart {
   }
 
   startStar(duration = STAR.duration) {
+    this.drunkTimer = 0;
     const was = this.starTimer > 0;
     this.starTimer = Math.max(this.starTimer, duration);
     this.spinTimer = 0;
@@ -303,6 +304,8 @@ export class Kart {
   }
 
   _tickTimers(dt) {
+    this._driveClock += dt;
+    this.drunkTimer = Math.max(0, this.drunkTimer - dt);
     if (this.boostTimer > 0) this.boostTimer = Math.max(0, this.boostTimer - dt);
     if (this.starTimer > 0) {
       this.starTimer -= dt;
@@ -376,7 +379,8 @@ export class Kart {
     }
 
     const disabled = this.isDisabled();
-    const steer = disabled ? 0 : clamp(+inp.steer || 0, -1, 1);
+    const wobble = this.drunkTimer > 0 ? Math.min(1,this.drunkTimer) * (Math.sin(this._driveClock*3.2 + this.position.z*.008)*.28 + Math.sin(this._driveClock*5.7)*.09) : 0;
+    const steer = disabled ? 0 : clamp((+inp.steer || 0) + wobble, -1, 1);
     const throttle = disabled || this.stallTimer > 0 ? 0 : clamp(+inp.throttle || 0, 0, 1);
     const brake = disabled ? 0 : clamp(+inp.brake || 0, 0, 1);
     const driftBtn = !disabled && !!inp.drift;
